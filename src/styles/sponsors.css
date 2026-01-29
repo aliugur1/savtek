@@ -1,0 +1,249 @@
+/*SPONSORS SECTION */
+:root {
+  --sponsor-bg: linear-gradient(135deg, #fafafa 0%, #ffffff 100%);
+  --sponsor-card-bg: #ffffff;
+  --sponsor-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  --sponsor-shadow-hover: 0 8px 30px rgba(0, 0, 0, 0.12);
+  --primary-color: #ff8c00;
+  --text-dark: #111;
+  --text-medium: #666;
+}
+
+/* SECTION CONTAINER */
+.sponsors-section {
+  padding: 100px 20px;
+  background: var(--sponsor-bg);
+  overflow: hidden;
+  position: relative;
+}
+/* Başlıksız kullanım için daha az padding */
+.sponsors-section:not(:has(.section-header)) {
+  padding: 60px 20px;
+}
+.sponsors-section .container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* SECTION HEADER */
+.sponsors-section .section-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+.sponsors-section .section-label {
+  display: inline-block;
+  color: var(--primary-color);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  position: relative;
+}
+.sponsors-section .section-label::after {
+  content: "";
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 3px;
+  background: var(--primary-color);
+  border-radius: 2px;
+}
+.sponsors-section .sponsors-title,
+.sponsors-section h2 {
+  font-size: 38px;
+  font-weight: 700;
+  margin: 0 0 16px 0;
+  color: var(--text-dark);
+  line-height: 1.2;
+}
+.sponsors-section p {
+  font-size: 16px;
+  color: var(--text-medium);
+  max-width: 700px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+
+/* SPONSOR SLIDER TRACK CONTAINER */
+.sponsors-track-container {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  padding: 40px 0;
+}
+/* Gradient fade kenarlar - sol ve sağ */
+.sponsors-track-container::before,
+.sponsors-track-container::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 150px;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+}
+.sponsors-track-container::before {
+  left: 0;
+  background: linear-gradient(to right, #fafafa, transparent);
+}
+.sponsors-track-container::after {
+  right: 0;
+  background: linear-gradient(to left, #fafafa, transparent);
+}
+
+/* SLIDING TRACK */
+.sponsors-track {
+  display: flex;
+  gap: 80px;
+  width: fit-content;
+
+  /* Infinite scroll animation */
+  animation: scroll-sponsors 35s linear infinite;
+}
+
+/* Hover durduğunda animasyonu durdur */
+.sponsors-track:hover {
+  animation-play-state: paused;
+}
+
+/* SPONSOR CARDS */
+
+.sponsor-item {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 200px;
+  height: 120px;
+  padding: 24px;
+
+  background: var(--sponsor-card-bg);
+  border-radius: 16px;
+  box-shadow: var(--sponsor-shadow);
+
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+/* Hover glow effect */
+.sponsor-item::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 140, 0, 0.1);
+  transform: translate(-50%, -50%);
+  transition: width 0.5s ease, height 0.5s ease;
+}
+.sponsor-item:hover::before {
+  width: 300px;
+  height: 300px;
+}
+.sponsor-item img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+
+  /* Başlangıçta gri ve soluk */
+  filter: grayscale(100%) opacity(0.6);
+  transition: filter 0.4s ease, transform 0.3s ease;
+
+  position: relative;
+  z-index: 1;
+}
+/* Hover effects */
+.sponsor-item:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: var(--sponsor-shadow-hover);
+}
+.sponsor-item:hover img {
+  filter: grayscale(0%) opacity(1);
+  transform: scale(1.08);
+}
+.sponsor-item:active {
+  transform: translateY(-5px) scale(1);
+}
+
+/* ANIMATION */
+@keyframes scroll-sponsors {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    /* Sponsor listesi 3 kez tekrarlandığı için %33.33 kayma yeterli */
+    transform: translateX(calc(-100% / 3));
+  }
+}
+
+/* RESPONSIVE - TABLET */
+@media (max-width: 900px) {
+  .sponsors-section {
+    padding: 80px 20px;
+  }
+  .sponsors-section .sponsors-title,
+  .sponsors-section h2 {
+    font-size: 32px;
+  }
+  .sponsors-section p {
+    font-size: 15px;
+  }
+  .sponsors-track {
+    gap: 60px;
+    animation: scroll-sponsors 25s linear infinite;
+  }
+  .sponsor-item {
+    width: 160px;
+    height: 100px;
+    padding: 20px;
+  }
+  .sponsors-track-container::before,
+  .sponsors-track-container::after {
+    width: 100px;
+  }
+}
+
+/* RESPONSIVE - MOBILE */
+@media (max-width: 600px) {
+  .sponsors-section {
+    padding: 60px 16px;
+  }
+  .sponsors-section .section-header {
+    margin-bottom: 40px;
+  }
+  .sponsors-section .section-label {
+    font-size: 12px;
+    letter-spacing: 2px;
+  }
+  .sponsors-section .sponsors-title,
+  .sponsors-section h2 {
+    font-size: 26px;
+  }
+  .sponsors-section p {
+    font-size: 14px;
+  }
+  .sponsors-track-container {
+    padding: 30px 0;
+  }
+  .sponsors-track {
+    gap: 40px;
+    animation: scroll-sponsors 20s linear infinite;
+  }
+  .sponsor-item {
+    width: 140px;
+    height: 90px;
+    padding: 16px;
+    border-radius: 12px;
+  }
+  .sponsors-track-container::before,
+  .sponsors-track-container::after {
+    width: 60px;
+  }
+}

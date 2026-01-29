@@ -1,0 +1,447 @@
+/* =========================
+   EKİP SAYFASI
+========================== */
+
+.ekip-page {
+  width: 100%;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+.section-label {
+  display: inline-block;
+  color: #ff8c00;
+  font-size: 12px;
+  letter-spacing: 2.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+/* =========================
+   HERO
+========================== */
+.ekip-hero {
+  padding: 140px 40px 80px;
+  background: linear-gradient(135deg, #fafafa 0%, #ffffff 100%);
+  text-align: center;
+}
+
+.ekip-hero h1 {
+  font-size: 56px;
+  font-weight: 800;
+  color: #111;
+  margin-bottom: 20px;
+  letter-spacing: -1px;
+}
+
+.hero-subtitle {
+  font-size: 18px;
+  line-height: 1.7;
+  color: #666;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+/* =========================
+   BAŞKANLIK
+========================== */
+.baskanlik {
+  padding: 100px 40px;
+  background: #fff;
+}
+
+.baskanlik-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 60px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.leader-card {
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.leader-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.12);
+}
+
+.leader-image {
+  position: relative;
+  width: 100%;
+  height: 400px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #f5f5f5, #e8e8e8);
+}
+
+.leader-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* SOSYAL MEDYA (HOVER) */
+.leader-socials {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 12px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 2;
+}
+
+.leader-card:hover .leader-socials {
+  opacity: 1;
+}
+
+.leader-socials a {
+  width: 44px;
+  height: 44px;
+  background: transparent;
+  border: 2px solid #fff;
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.leader-socials a:hover {
+  background: #fff;
+  color: #ff8c00;
+  transform: scale(1.1);
+}
+
+.leader-socials svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+
+.leader-info {
+  padding: 32px 28px;
+  text-align: center;
+}
+
+.leader-info h3 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #111;
+  margin-bottom: 8px;
+}
+
+.leader-role {
+  font-size: 16px;
+  font-weight: 600;
+  color: #ff8c00;
+  margin-bottom: 8px;
+}
+
+.leader-department {
+  font-size: 14px;
+  color: #888;
+  font-style: italic;
+}
+
+/* =========================
+   KOORDİNATÖRLÜKLER
+========================== */
+.koordinatorlukler {
+  padding: 80px 40px;
+  background: #fafafa;
+}
+
+.koordinatorluk-section {
+  margin-bottom: 80px;
+}
+
+.koordinatorluk-section:last-child {
+  margin-bottom: 0;
+}
+
+.koordinatorluk-title {
+  font-size: 26px;
+  font-weight: 600;
+  color: #111;
+  margin-bottom: 32px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid rgba(255, 140, 0, 0.2);
+}
+
+.koordinator-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 250px));
+  gap: 32px;
+  justify-content: center;
+}
+
+.koordinator-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 0;
+  text-align: center;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+}
+
+.koordinator-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  border-color: #ff8c00;
+}
+
+.koordinator-image-placeholder {
+  width: 100%;
+  height: 350px;
+  margin: 0;
+  background: #f5f5f5;
+  border-radius: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  padding: 0;
+}
+
+.koordinator-image-placeholder img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 1;
+  transition: transform 0.3s ease;
+}
+
+.koordinator-card:hover .koordinator-image-placeholder img {
+  transform: scale(1.05);
+}
+
+/* KOORDİNATÖR SOSYAL MEDYA (HOVER) */
+.koordinator-socials {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 2;
+}
+
+.koordinator-card:hover .koordinator-socials {
+  opacity: 1;
+}
+
+.koordinator-socials a {
+  width: 36px;
+  height: 36px;
+  background: transparent;
+  border: 2px solid #fff;
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.koordinator-socials a:hover {
+  background: #fff;
+  color: #ff8c00;
+  transform: scale(1.1);
+}
+
+.koordinator-socials svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}
+
+.koordinator-card h3 {
+  padding: 20px 16px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #111;
+  margin: 0;
+}
+
+/* =========================
+   ALT YÖNETİM NOTE
+========================== */
+.alt-yonetim-note {
+  padding: 60px 40px;
+  background: linear-gradient(135deg, #111 0%, #1a1a1a 100%);
+  text-align: center;
+}
+
+.alt-yonetim-note p {
+  font-size: 18px;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.85);
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.alt-yonetim-note strong {
+  color: #ff8c00;
+  font-weight: 600;
+}
+/* =========================
+   EKİP MOBİL
+========================== */
+
+@media (max-width: 900px) {
+  .container {
+    padding: 0 20px;
+  }
+
+  /* HERO */
+  .ekip-hero {
+    padding: 100px 20px 60px;
+  }
+
+  .ekip-hero h1 {
+    font-size: 36px;
+  }
+
+  .hero-subtitle {
+    font-size: 16px;
+  }
+
+  /* BAŞKANLIK */
+  .baskanlik {
+    padding: 60px 20px;
+  }
+
+  .baskanlik-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .leader-image {
+    height: 320px;
+  }
+
+  .leader-info {
+    padding: 24px 20px;
+  }
+
+  .leader-info h3 {
+    font-size: 20px;
+  }
+
+  .leader-role {
+    font-size: 15px;
+  }
+
+  .leader-department {
+    font-size: 13px;
+  }
+
+  /* SOSYAL MEDYA - MOBİLDE TURUNCU */
+  .leader-socials {
+    opacity: 1 !important;
+  }
+
+  .leader-socials a {
+    background: #ff8c00;
+    border: none;
+    color: #fff;
+  }
+
+  .leader-socials a:hover {
+    background: #ff6600;
+  }
+
+  /* KOORDİNATÖRLÜKLER */
+  .koordinatorlukler {
+    padding: 60px 20px;
+  }
+
+  .koordinatorluk-section {
+    margin-bottom: 60px;
+  }
+
+  .koordinatorluk-title {
+    font-size: 22px;
+    margin-bottom: 24px;
+  }
+
+  .koordinator-grid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 180px));
+    gap: 24px;
+  }
+
+  .koordinator-card {
+    padding: 0;
+  }
+
+  .koordinator-image-placeholder {
+    height: 240px;
+  }
+
+  /* KOORDİNATÖR SOSYAL - MOBİLDE TURUNCU */
+  .koordinator-socials {
+    opacity: 1 !important;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .koordinator-socials a {
+    width: 32px;
+    height: 32px;
+    background: #ff8c00;
+    border: none;
+    color: #fff;
+  }
+
+  .koordinator-socials a:hover {
+    background: #ff6600;
+  }
+
+  .koordinator-socials svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .koordinator-card h3 {
+    font-size: 15px;
+    padding: 16px 12px;
+  }
+
+  /* ALT YÖNETİM NOTE */
+  .alt-yonetim-note {
+    padding: 40px 20px;
+  }
+
+  .alt-yonetim-note p {
+    font-size: 16px;
+  }
+}
+
+/* TABLET (768px - 900px) */
+@media (min-width: 768px) and (max-width: 900px) {
+  .koordinator-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 200px));
+  }
+}

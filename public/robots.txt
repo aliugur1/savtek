@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://savtek.ktun.edu.tr/sitemap.xml
+
+
+

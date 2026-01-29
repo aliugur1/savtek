@@ -1,0 +1,735 @@
+/* =========================
+   HAKKIMIZDA SAYFASI
+========================== */
+
+.hakkimizda-page {
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* GENEL CONTAINER */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+/* SECTION LABEL */
+.section-label {
+  display: inline-block;
+  color: #ff8c00;
+  font-size: 12px;
+  letter-spacing: 2.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+/* =========================
+   ABOUT HERO - SPLIT LAYOUT
+========================== */
+.about-hero {
+  padding: 140px 40px 100px;
+  background: linear-gradient(135deg, #fafafa 0%, #ffffff 50%, #fafafa 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.about-hero::before {
+  content: "";
+  position: absolute;
+  top: -100px;
+  right: -100px;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(255, 140, 0, 0.06), transparent 70%);
+  border-radius: 50%;
+  z-index: 0;
+}
+
+.about-hero .container {
+  position: relative;
+  z-index: 1;
+}
+
+/* SPLIT GRID */
+.hero-split-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.hero-text-content h1 {
+  font-size: 56px;
+  font-weight: 800;
+  color: #111;
+  margin-bottom: 32px;
+  letter-spacing: -1px;
+  line-height: 1.1;
+}
+
+.hero-content {
+  max-width: 600px;
+}
+
+.hero-content p {
+  font-size: 17px;
+  line-height: 1.8;
+  color: #444;
+  margin-bottom: 20px;
+}
+
+.hero-content .lead {
+  font-size: 19px;
+  line-height: 1.7;
+  color: #222;
+}
+
+.hero-content strong {
+  color: #ff8c00;
+  font-weight: 600;
+}
+
+/* HERO GÖRSEL */
+.hero-visual {
+  position: relative;
+  height: 450px;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+}
+
+.hero-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.5s ease;
+}
+
+.hero-visual:hover .hero-image {
+  transform: scale(1.05);
+}
+
+/* =========================
+   ABOUT SECTION (GENEL)
+========================== */
+.about-section {
+  padding: 100px 40px;
+}
+
+.about-section:nth-child(even) {
+  background: #fafafa;
+}
+
+/* SECTION GRID (Sol-Sağ Düzen) */
+.section-grid {
+  display: grid;
+  grid-template-columns: 0.8fr 1.2fr;
+  gap: 80px;
+  align-items: start;
+}
+
+.section-left h2 {
+  font-size: 42px;
+  font-weight: 700;
+  color: #111;
+  margin-top: 8px;
+  line-height: 1.2;
+}
+
+.section-right p {
+  font-size: 17px;
+  line-height: 1.8;
+  color: #555;
+  margin-bottom: 20px;
+}
+
+.section-right .year-highlight {
+  font-size: 48px;
+  font-weight: 800;
+  color: #ff8c00;
+  margin-bottom: 24px;
+}
+
+.section-right strong {
+  color: #111;
+  font-weight: 600;
+}
+
+/* =========================
+   TARİHÇE - TIMELINE + BADGE
+========================== */
+.timeline-items {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  margin: 32px 0;
+  padding-left: 0;
+  border-left: none;
+}
+
+.timeline-item {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 24px;
+  align-items: flex-start;
+  position: relative;
+}
+
+.timeline-item::before {
+  content: "";
+  position: absolute;
+  left: 40px;
+  top: 50px;
+  bottom: -32px;
+  width: 2px;
+  background: linear-gradient(to bottom, #ff8c00, rgba(255, 140, 0, 0.2));
+}
+
+.timeline-item:last-child::before {
+  display: none;
+}
+
+.timeline-badge {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #ff9900, #ff5500);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(255, 140, 0, 0.3);
+  position: relative;
+}
+
+.badge-year {
+  font-size: 18px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: 0.5px;
+}
+
+.timeline-content {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  background: #fff;
+  padding: 20px 24px;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.timeline-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.timeline-content p {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #444;
+  margin: 0;
+}
+
+.highlight-text {
+  font-size: 18px !important;
+  color: #222 !important;
+  padding: 24px;
+  background: linear-gradient(135deg, #fff9f0, #ffffff);
+  border-left: 4px solid #ff8c00;
+  border-radius: 8px;
+  margin-top: 32px !important;
+}
+
+/* =========================
+   VİZYON & MİSYON
+========================== */
+.vizyon-misyon {
+  background: linear-gradient(135deg, #111 0%, #1a1a1a 100%);
+  color: #fff;
+}
+
+.vm-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.vm-card {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 48px 40px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.vm-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+}
+
+.vm-icon {
+  font-size: 48px;
+  display: block;
+  margin-bottom: 20px;
+}
+
+.vm-card h3 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 20px;
+}
+
+.vm-card p {
+  font-size: 17px;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.vm-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.vm-card ul li {
+  font-size: 16px;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 16px;
+  padding-left: 28px;
+  position: relative;
+}
+
+.vm-card ul li::before {
+  content: "→";
+  position: absolute;
+  left: 0;
+  color: #ff8c00;
+  font-weight: 700;
+}
+
+/* =========================
+   DEĞERLER - PATTERN BACKGROUND
+========================== */
+.degerler {
+  background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.degerler::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 20px,
+      rgba(255, 140, 0, 0.015) 20px,
+      rgba(255, 140, 0, 0.015) 40px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 20px,
+      rgba(255, 140, 0, 0.015) 20px,
+      rgba(255, 140, 0, 0.015) 40px
+    );
+  opacity: 0.6;
+  z-index: 0;
+}
+
+.degerler .container {
+  position: relative;
+  z-index: 1;
+}
+
+.section-header-center {
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto 60px;
+}
+
+.section-header-center h2 {
+  font-size: 42px;
+  font-weight: 700;
+  color: #111;
+  margin-bottom: 16px;
+}
+
+.section-header-center p {
+  font-size: 17px;
+  line-height: 1.7;
+  color: #666;
+}
+
+.degerler-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 32px;
+  margin-bottom: 48px;
+}
+
+.deger-card {
+  background: #fff;
+  padding: 36px 28px;
+  border-radius: 14px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.deger-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.1);
+  border-color: #ff8c00;
+}
+
+.deger-icon {
+  font-size: 40px;
+  display: block;
+  margin-bottom: 16px;
+}
+
+.deger-card h4 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #111;
+  margin-bottom: 12px;
+}
+
+.deger-card p {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #666;
+  margin: 0;
+}
+
+.degerler-footer {
+  text-align: center;
+  font-size: 17px;
+  color: #555;
+  font-style: italic;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+/* =========================
+   EKİP
+========================== */
+.ekip-structure {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+  margin-bottom: 60px;
+}
+
+.structure-item {
+  text-align: center;
+  padding: 32px 24px;
+  background: #fff;
+  border-radius: 12px;
+  border: 2px solid #f0f0f0;
+  transition: all 0.3s ease;
+}
+
+.structure-item:hover {
+  border-color: #ff8c00;
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(255, 140, 0, 0.15);
+}
+
+.structure-number {
+  display: inline-block;
+  font-size: 32px;
+  font-weight: 800;
+  color: #ff8c00;
+  margin-bottom: 16px;
+}
+
+.structure-item h4 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #111;
+  margin-bottom: 12px;
+}
+
+.structure-item p {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #666;
+  margin: 0;
+}
+
+/* EKİP FOTOĞRAF PLACEHOLDER */
+.ekip-photo-placeholder {
+  width: 100%;
+  height: 400px;
+  background: linear-gradient(135deg, #f5f5f5, #e8e8e8);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 40px;
+  border: 2px dashed rgba(0, 0, 0, 0.1);
+}
+
+.photo-overlay {
+  text-align: center;
+}
+
+.photo-overlay p {
+  font-size: 48px;
+  margin-bottom: 8px;
+}
+
+.photo-overlay span {
+  font-size: 16px;
+  color: #888;
+}
+
+.ekip-footer {
+  text-align: center;
+  font-size: 18px;
+  color: #444;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.ekip-footer strong {
+  color: #ff8c00;
+}
+/* =========================
+   HAKKIMIZDA MOBİL
+========================== */
+
+@media (max-width: 900px) {
+  .container {
+    padding: 0 20px;
+  }
+
+  /* ABOUT HERO - SPLIT */
+  .about-hero {
+    padding: 100px 20px 60px;
+  }
+
+  .about-hero::before {
+    width: 250px;
+    height: 250px;
+    top: -50px;
+    right: -50px;
+  }
+
+  .hero-split-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .hero-text-content h1 {
+    font-size: 36px;
+  }
+
+  .hero-content p {
+    font-size: 16px;
+  }
+
+  .hero-content .lead {
+    font-size: 17px;
+  }
+
+  .hero-visual {
+    height: 300px;
+  }
+
+  .hero-image {
+    object-fit: cover;
+  }
+
+  /* ABOUT SECTION */
+  .about-section {
+    padding: 60px 20px;
+  }
+
+  /* SECTION GRID */
+  .section-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .section-left h2 {
+    font-size: 32px;
+  }
+
+  .section-right p {
+    font-size: 16px;
+  }
+
+  .section-right .year-highlight {
+    font-size: 36px;
+  }
+
+  /* TARİHÇE - TIMELINE */
+  .timeline-items {
+    gap: 24px;
+  }
+
+  .timeline-item {
+    grid-template-columns: 60px 1fr;
+    gap: 16px;
+  }
+
+  .timeline-item::before {
+    left: 30px;
+    top: 40px;
+  }
+
+  .timeline-badge {
+    width: 60px;
+    height: 60px;
+    border-radius: 10px;
+  }
+
+  .badge-year {
+    font-size: 15px;
+  }
+
+  .timeline-content {
+    padding: 16px 18px;
+  }
+
+  .timeline-icon {
+    font-size: 20px;
+  }
+
+  .timeline-content p {
+    font-size: 15px;
+  }
+
+  .highlight-text {
+    font-size: 16px !important;
+    padding: 20px;
+  }
+
+  /* VİZYON & MİSYON */
+  .vm-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .vm-card {
+    padding: 36px 28px;
+  }
+
+  .vm-icon {
+    font-size: 40px;
+  }
+
+  .vm-card h3 {
+    font-size: 24px;
+  }
+
+  .vm-card p {
+    font-size: 16px;
+  }
+
+  .vm-card ul li {
+    font-size: 15px;
+  }
+
+  /* SECTION HEADER CENTER */
+  .section-header-center h2 {
+    font-size: 32px;
+  }
+
+  .section-header-center p {
+    font-size: 16px;
+  }
+
+  /* DEĞERLER */
+  .degerler-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .deger-card {
+    padding: 28px 24px;
+  }
+
+  .deger-icon {
+    font-size: 36px;
+  }
+
+  .deger-card h4 {
+    font-size: 18px;
+  }
+
+  .deger-card p {
+    font-size: 14px;
+  }
+
+  .degerler-footer {
+    font-size: 16px;
+  }
+
+  /* EKİP */
+  .ekip-structure {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .structure-item {
+    padding: 28px 20px;
+  }
+
+  .structure-number {
+    font-size: 28px;
+  }
+
+  .structure-item h4 {
+    font-size: 18px;
+  }
+
+  .structure-item p {
+    font-size: 14px;
+  }
+
+  .ekip-photo-placeholder {
+    height: 300px;
+  }
+
+  .photo-overlay p {
+    font-size: 36px;
+  }
+
+  .photo-overlay span {
+    font-size: 14px;
+  }
+
+  .ekip-footer {
+    font-size: 16px;
+  }
+}
+
+/* TABLET (768px - 900px) */
+@media (min-width: 768px) and (max-width: 900px) {
+  .degerler-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+
+  .ekip-structure {
+    grid-template-columns: 1fr;
+  }
+}
