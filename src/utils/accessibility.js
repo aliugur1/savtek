@@ -94,7 +94,7 @@ export function announceToScreenReader(message, priority = "polite") {
 /**
  * Check color contrast ratio
  */
-export function checkContrast(foreground, background) {
+export function checkContrast() {
   // Simplified contrast check - in production use a library
   // Returns true if contrast is sufficient (WCAG AA: 4.5:1 for normal text)
   return true; // Placeholder - implement actual contrast calculation

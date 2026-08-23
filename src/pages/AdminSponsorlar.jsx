@@ -1,49 +1,20 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { getSponsors, softDeleteSponsor } from "../lib/dataService";
 import "../styles/admin.css";
 
 function AdminSponsorlar() {
   const [sponsorlar, setSponsorlar] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
 
-  // Load sponsors from localStorage
-  useEffect(() => {
-    const stored = localStorage.getItem("sponsorlar");
-    if (stored) {
-      setSponsorlar(JSON.parse(stored));
-    } else {
-      // Dummy data
-      const dummyData = [
-        {
-          id: "1",
-          name: "ASELSAN",
-          logo: "/aselsan.png",
-          website: "https://www.aselsan.com.tr",
-          instagram: "https://www.instagram.com/aselsan",
-          linkedin: "https://www.linkedin.com/company/aselsan",
-          order: 1,
-        },
-        {
-          id: "2",
-          name: "HAVELSAN",
-          logo: "/havelsan.png",
-          website: "https://www.havelsan.com.tr",
-          instagram: "https://www.instagram.com/havelsan",
-          linkedin: "https://www.linkedin.com/company/havelsan",
-          order: 2,
-        },
-      ];
-      setSponsorlar(dummyData);
-      localStorage.setItem("sponsorlar", JSON.stringify(dummyData));
-    }
-  }, []);
+  const refresh = () => getSponsors().then(setSponsorlar);
 
-  // Delete sponsor
-  const handleDelete = (id) => {
+  useEffect(() => { refresh(); }, []);
+
+  const handleDelete = async (id) => {
     if (window.confirm("Bu sponsoru silmek istediğinizden emin misiniz?")) {
-      const updated = sponsorlar.filter((s) => String(s.id) !== String(id));
-      setSponsorlar(updated);
-      localStorage.setItem("sponsorlar", JSON.stringify(updated));
+      await softDeleteSponsor(id);
+      refresh();
     }
   };
 

@@ -1,7 +1,7 @@
 User-agent: *
 Allow: /
+Disallow: /admin
+Disallow: /panel
+Disallow: /giris
 
 Sitemap: https://savtek.ktun.edu.tr/sitemap.xml
-
-
-

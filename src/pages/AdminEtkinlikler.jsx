@@ -8,6 +8,7 @@ import {
 } from "../utils/softDelete";
 import { createLog } from "../utils/adminLogger";
 import { bulkDelete } from "../utils/bulkOperations";
+import { getEvents } from "../lib/dataService";
 import "../styles/admin.css";
 
 function AdminEtkinlikler() {
@@ -19,90 +20,39 @@ function AdminEtkinlikler() {
   const [selectedItems, setSelectedItems] = useState([]);
   const [selectMode, setSelectMode] = useState(false);
 
-  // Load events from localStorage
-  useEffect(() => {
-    const stored = localStorage.getItem("etkinlikler");
-    if (stored) {
-      const allEvents = JSON.parse(stored);
-      setEtkinlikler(getActiveItems("etkinlikler"));
-      setDeletedEvents(getDeletedItems("etkinlikler"));
-    } else {
-      // Initialize with dummy data
-      const dummyData = [
-        {
-          id: "1",
-          title: "TG25 - Teknoloji Günü 2025",
-          slug: "tg25-teknoloji-gunu",
-          category: "Seminer",
-          date: "13 Aralık 2025",
-          excerpt:
-            "ASELSAN, HAVELSAN ve SIEMENS temsilcilerinin katılımıyla düzenlenen Teknoloji Günü etkinliğimiz.",
-          image: "/hero-anka.png",
-          location: "KTO Karatay Üniversitesi",
-        },
-        {
-          id: "2",
-          title: "Roket Tasarımında CAD Kullanımı",
-          slug: "roket-cad-workshop",
-          category: "Workshop",
-          date: "15 Kasım 2025",
-          excerpt:
-            "Roket takımımızın düzenlediği CAD workshop'unda, roket tasarım süreçleri hakkında uygulamalı eğitim.",
-          image: "/hero-anka.png",
-          location: "SAVTEK Atölyesi",
-        },
-      ];
-      localStorage.setItem("etkinlikler", JSON.stringify(dummyData));
-      setEtkinlikler(dummyData);
-    }
-  }, []);
+  const refreshLists = async () => {
+    const [active, deleted] = await Promise.all([
+      getActiveItems("etkinlikler"),
+      getDeletedItems("etkinlikler"),
+    ]);
+    setEtkinlikler(active);
+    setDeletedEvents(deleted);
+  };
 
-  // Soft delete event
-  const handleDelete = (id) => {
-    if (
-      window.confirm(
-        "Bu etkinliği silmek istediğinizden emin misiniz? (Geri alınabilir)"
-      )
-    ) {
-      const event = etkinlikler.find((e) => e.id === id);
-      softDeleteItem("etkinlikler", id);
+  useEffect(() => { refreshLists(); }, []);
 
-      // Log the action
-      createLog("delete", "etkinlik", id, {
-        before: event,
-        after: { ...event, isDeleted: true },
-      });
-
-      // Refresh lists
-      setEtkinlikler(getActiveItems("etkinlikler"));
-      setDeletedEvents(getDeletedItems("etkinlikler"));
+  const handleDelete = async (id) => {
+    if (window.confirm("Bu etkinliği silmek istediğinizden emin misiniz? (Geri alınabilir)")) {
+      await softDeleteItem("etkinlikler", id);
+      createLog("delete", "etkinlik", id);
+      refreshLists();
     }
   };
 
-  // Restore deleted event
-  const handleRestore = (id) => {
-    restoreItem("etkinlikler", id);
+  const handleRestore = async (id) => {
+    await restoreItem("etkinlikler", id);
     createLog("restore", "etkinlik", id);
-    setEtkinlikler(getActiveItems("etkinlikler"));
-    setDeletedEvents(getDeletedItems("etkinlikler"));
+    refreshLists();
   };
 
-  // Bulk operations
-  const handleBulkDelete = () => {
+  const handleBulkDelete = async () => {
     if (selectedItems.length === 0) return;
-    if (
-      window.confirm(
-        `${selectedItems.length} etkinliği silmek istediğinizden emin misiniz?`
-      )
-    ) {
-      bulkDelete("etkinlikler", selectedItems);
-      selectedItems.forEach((id) => {
-        createLog("delete", "etkinlik", id);
-      });
+    if (window.confirm(`${selectedItems.length} etkinliği silmek istediğinizden emin misiniz?`)) {
+      await bulkDelete("etkinlikler", selectedItems);
+      selectedItems.forEach(id => createLog("delete", "etkinlik", id));
       setSelectedItems([]);
       setSelectMode(false);
-      setEtkinlikler(getActiveItems("etkinlikler"));
-      setDeletedEvents(getDeletedItems("etkinlikler"));
+      refreshLists();
     }
   };
 

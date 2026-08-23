@@ -1,23 +1,16 @@
 import { useState, useEffect } from "react";
 import Sponsors from "../components/Sponsors";
 import SEOMeta from "../components/SEOMeta";
+import { getEkip, getSettings } from "../lib/dataService";
 import "../styles/ekip.css";
 
 function Ekip() {
   const [ekipUyeleri, setEkipUyeleri] = useState([]);
   const [settings, setSettings] = useState({ altYonetimCount: 20 });
 
-  // Load team members and settings from localStorage
   useEffect(() => {
-    const stored = localStorage.getItem("ekip");
-    if (stored) {
-      setEkipUyeleri(JSON.parse(stored));
-    }
-
-    const storedSettings = localStorage.getItem("siteSettings");
-    if (storedSettings) {
-      setSettings(JSON.parse(storedSettings));
-    }
+    getEkip().then(setEkipUyeleri);
+    getSettings().then(setSettings);
   }, []);
 
   // Filter by category

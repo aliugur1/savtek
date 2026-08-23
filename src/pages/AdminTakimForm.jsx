@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
+import { getTeamById, saveTeam } from "../lib/dataService";
 import "../styles/admin.css";
 
 function AdminTakimForm() {
@@ -37,38 +38,11 @@ function AdminTakimForm() {
     linkedin: "",
   });
 
-  // Load team data if editing
   useEffect(() => {
-    if (isEdit) {
-      const stored = localStorage.getItem("takimlar");
-      if (stored) {
-        const teams = JSON.parse(stored);
-        const team = teams.find((t) => String(t.id) === String(id));
-        if (team) {
-          // Ensure all fields have defined values
-          setFormData({
-            id: team.id,
-            name: team.name || "",
-            slug: team.slug || "",
-            area: team.area || "",
-            image: team.image || "/hero-anka.png",
-            badge: team.badge || "Aktif Takım",
-            description: team.description || "",
-            order: team.order || 999,
-            featured: team.featured || false,
-            members: Array.isArray(team.members) ? team.members : [],
-            achievements: Array.isArray(team.achievements)
-              ? team.achievements
-              : [],
-            technologies: Array.isArray(team.technologies)
-              ? team.technologies
-              : [],
-            gallery: Array.isArray(team.gallery) ? team.gallery : [],
-            sponsors: Array.isArray(team.sponsors) ? team.sponsors : [],
-          });
-        }
-      }
-    }
+    if (!isEdit) return;
+    getTeamById(id).then(team => {
+      if (team) setFormData({ ...team, members: team.members ?? [], achievements: team.achievements ?? [], technologies: team.technologies ?? [], gallery: team.gallery ?? [], sponsors: team.sponsors ?? [] });
+    });
   }, [id, isEdit]);
 
   // Generate slug from name
@@ -196,26 +170,9 @@ function AdminTakimForm() {
     }));
   };
 
-  // Submit form
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const stored = localStorage.getItem("takimlar");
-    let teams = stored ? JSON.parse(stored) : [];
-
-    if (isEdit) {
-      // Update existing team
-      teams = teams.map((t) => (String(t.id) === String(id) ? formData : t));
-    } else {
-      // Add new team
-      const newTeam = {
-        ...formData,
-        id: String(Date.now()),
-      };
-      teams.push(newTeam);
-    }
-
-    localStorage.setItem("takimlar", JSON.stringify(teams));
+    await saveTeam(formData);
     navigate("/admin/takimlar");
   };
 

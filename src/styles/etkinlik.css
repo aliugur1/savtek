@@ -155,6 +155,34 @@
   backdrop-filter: blur(10px);
 }
 
+.team-event-badge {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  padding: 6px 14px;
+  background: rgba(17, 24, 39, 0.85);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+}
+
+.team-event-team {
+  margin: 0 0 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: rgba(255, 152, 0, 0.08);
+  color: #7a4b00;
+  font-size: 12px;
+  font-weight: 700;
+}
+
 /* ETKİNLİK İÇERİK */
 .etkinlik-content {
   padding: 28px 24px;

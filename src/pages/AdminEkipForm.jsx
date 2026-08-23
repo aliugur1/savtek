@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
+import { getEkipById, saveEkipMember } from "../lib/dataService";
 import "../styles/admin.css";
 
 function AdminEkipForm() {
@@ -19,30 +20,11 @@ function AdminEkipForm() {
     order: 999,
   });
 
-  // Load member data if editing
   useEffect(() => {
-    if (isEdit) {
-      const stored = localStorage.getItem("ekip");
-      if (stored) {
-        const members = JSON.parse(stored);
-        const member = members.find((m) => String(m.id) === String(id));
-        if (member) {
-          // Ensure all fields have defined values
-          setFormData({
-            id: member.id,
-            name: member.name || "",
-            role: member.role || "",
-            coordinationTitle: member.coordinationTitle || "",
-            department: member.department || "",
-            photo: member.photo || "/baskan.png",
-            instagram: member.instagram || "",
-            linkedin: member.linkedin || "",
-            category: member.category || "Yönetim",
-            order: member.order || 999,
-          });
-        }
-      }
-    }
+    if (!isEdit) return;
+    getEkipById(id).then(member => {
+      if (member) setFormData({ ...member });
+    });
   }, [id, isEdit]);
 
   const handleChange = (e) => {
@@ -53,28 +35,9 @@ function AdminEkipForm() {
     }));
   };
 
-  // Submit form
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const stored = localStorage.getItem("ekip");
-    let members = stored ? JSON.parse(stored) : [];
-
-    if (isEdit) {
-      // Update existing member
-      members = members.map((m) =>
-        String(m.id) === String(id) ? formData : m
-      );
-    } else {
-      // Add new member
-      const newMember = {
-        ...formData,
-        id: String(Date.now()),
-      };
-      members.push(newMember);
-    }
-
-    localStorage.setItem("ekip", JSON.stringify(members));
+    await saveEkipMember(formData);
     navigate("/admin/ekip");
   };
 

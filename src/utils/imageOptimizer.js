@@ -50,7 +50,7 @@ export function checkWebPSupport() {
  * @param {object} props - Additional img props
  * @returns {JSX.Element} Optimized img element
  */
-export function OptimizedImage({ src, alt, ...props }) {
+export function OptimizedImage({ src }) {
   // This function requires React to be imported in the component file
   // Example usage in component:
   // import { useState, useEffect } from 'react';
@@ -72,7 +72,7 @@ export function createOptimizedImageComponent(React) {
 
   return function OptimizedImageComponent({ src, alt, ...props }) {
     const [imageSrc, setImageSrc] = useState("");
-    const [error, setError] = useState(false);
+    const [error] = useState(false);
 
     useEffect(() => {
       if (!src) return;

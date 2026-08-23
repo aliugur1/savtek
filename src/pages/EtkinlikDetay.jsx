@@ -1,113 +1,72 @@
 import { useParams, Link } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import SEOMeta from "../components/SEOMeta";
-import { getActiveItems } from "../utils/softDelete";
+import { getEventBySlug } from "../lib/dataService";
 import "../styles/etkinlik-detay.css";
+
+const findTeamPanelEvent = (slug) => {
+  try {
+    for (const key of Object.keys(localStorage)) {
+      if (!key.startsWith("savtek-team-panel:")) continue;
+      const parsed = JSON.parse(localStorage.getItem(key) || "{}");
+      const teamName = parsed?.team?.name || "Takım";
+      const teamSlug = parsed?.team?.slug || "takim";
+      for (const ev of (parsed?.events || [])) {
+        if (`takim-${teamSlug}-${ev.id || ""}` !== slug) continue;
+        return {
+          title: ev.title,
+          category: "Takım Etkinliği",
+          date: ev.date || "",
+          location: ev.location || "",
+          mainImage: "/hero-anka.png",
+          description: ev.description || "",
+          teamName,
+        };
+      }
+    }
+  } catch { /* ignore */ }
+  return null;
+};
 
 function EtkinlikDetay() {
   const { slug } = useParams();
   const [etkinlik, setEtkinlik] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [currentImage, setCurrentImage] = useState(0);
 
-  // Load event from localStorage (Admin panel integration)
   useEffect(() => {
-    const storedEvents = localStorage.getItem("etkinlikler");
-    if (storedEvents) {
-      // Sadece aktif (silinmemiş) etkinlikleri kontrol et
-      const events = getActiveItems("etkinlikler");
-      const foundEvent = events.find((e) => e.slug === slug);
-      setEtkinlik(foundEvent);
-    } else {
-      // Fallback dummy data
-      const dummyData = {
-        "tg25-teknoloji-gunu": {
-          title: "TG25 - Teknoloji Günü 2025",
-          category: "Seminer",
-          date: "13 Aralık 2025",
-          time: "10:30 - 15:00",
-          location: "G-241 Konferans Salonu",
-          locationLink: "https://maps.app.goo.gl/HVCnTjY6FBiPm7UKe",
-          mainImage: "/tg25.png",
-          description:
-            "ASELSAN, HAVELSAN ve SIEMENS temsilcilerinin katılımıyla düzenlenen Teknoloji Günü etkinliğimiz. Savunma teknolojileri alanında kariyer yapmak isteyen öğrencilerimiz için düzenlediğimiz etkinlikte, sektörün önde gelen firmalarından konuşmacılar ağırladık.",
-          speakers: [
-            {
-              name: "Bekir Şahin",
-              title: "Üretim Planlama Lideri",
-              company: "ASELSAN",
-              photo: "/bekir-sahin.jpg",
-              linkedin:
-                "https://www.linkedin.com/in/bekir-%C5%9Fahin-6a0189130/",
-            },
-            {
-              name: "Ayşe Yıldız Çevik",
-              title: "Proje Mühendisi",
-              company: "HAVELSAN",
-              photo: "/ayse-yildiz-cevik.jpg",
-              linkedin: "https://www.linkedin.com/in/ayseyildiz/",
-            },
-            {
-              name: "Ali Çağlar Şentürk",
-              title: "Kalite Profesyoneli",
-              company: "SIEMENS",
-              photo: "/ali-caglar-senturk.jpg",
-              linkedin:
-                "https://www.linkedin.com/in/ali-caglar-senturk-10a014b5/",
-            },
-          ],
-          program: [
-            { time: "10:30 - 11:00", activity: "Açılış ve Hoş Geldiniz" },
-            {
-              time: "11:00 - 11:45",
-              activity: "ASELSAN - Savunma Sanayi ve Kariyer",
-            },
-            {
-              time: "11:45 - 12:30",
-              activity: "HAVELSAN - Proje Yönetimi Deneyimleri",
-            },
-            { time: "12:30 - 13:15", activity: "Öğle Arası" },
-            {
-              time: "13:15 - 14:00",
-              activity: "SIEMENS - Endüstri 4.0 ve Kalite Süreçleri",
-            },
-            { time: "14:00 - 15:00", activity: "Soru-Cevap ve Networking" },
-          ],
-          gallery: [
-            "/tg25.png",
-            "/hero-anka.png",
-            "/logo.png",
-            "/tg25.png",
-            "/hero-anka.png",
-            "/logo.png",
-          ],
-        },
-      };
-      setEtkinlik(dummyData[slug]);
+    setLoading(true);
+    const teamFound = findTeamPanelEvent(slug);
+    if (teamFound) {
+      setEtkinlik(teamFound);
+      setLoading(false);
+      return;
     }
+    getEventBySlug(slug).then((e) => { setEtkinlik(e); setLoading(false); });
   }, [slug]);
 
   // Lightbox functions
-  const openLightbox = (index) => {
+  const openLightbox = useCallback((index) => {
     setCurrentImage(index);
     setLightboxOpen(true);
-  };
+  }, []);
 
-  const closeLightbox = () => setLightboxOpen(false);
+  const closeLightbox = useCallback(() => setLightboxOpen(false), []);
 
-  const nextImage = () => {
+  const nextImage = useCallback(() => {
     if (etkinlik?.gallery) {
       setCurrentImage((prev) => (prev + 1) % etkinlik.gallery.length);
     }
-  };
+  }, [etkinlik]);
 
-  const prevImage = () => {
+  const prevImage = useCallback(() => {
     if (etkinlik?.gallery) {
       setCurrentImage(
         (prev) => (prev - 1 + etkinlik.gallery.length) % etkinlik.gallery.length
       );
     }
-  };
+  }, [etkinlik]);
 
   // Keyboard navigation
   useEffect(() => {
@@ -120,7 +79,9 @@ function EtkinlikDetay() {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [lightboxOpen, etkinlik]);
+  }, [closeLightbox, lightboxOpen, nextImage, prevImage]);
+
+  if (loading) return null;
 
   if (!etkinlik) {
     return (

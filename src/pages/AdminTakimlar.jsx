@@ -8,6 +8,7 @@ import {
 } from "../utils/softDelete";
 import { createLog } from "../utils/adminLogger";
 import { bulkDelete, bulkToggleFeature } from "../utils/bulkOperations";
+import { getTeams } from "../lib/dataService";
 import "../styles/admin.css";
 
 function AdminTakimlar() {
@@ -19,105 +20,50 @@ function AdminTakimlar() {
   const [selectedItems, setSelectedItems] = useState([]);
   const [selectMode, setSelectMode] = useState(false);
 
-  // LocalStorage'dan takımları yükle
-  useEffect(() => {
-    const savedTakimlar = localStorage.getItem("takimlar");
-    if (savedTakimlar) {
-      const active = getActiveItems("takimlar");
-      // Order numarasına göre sırala
-      const sorted = active.sort((a, b) => (a.order || 999) - (b.order || 999));
-      setTakimlar(sorted);
-      setDeletedTeams(getDeletedItems("takimlar"));
-    } else {
-      // Dummy data
-      const dummyData = [
-        {
-          id: "999",
-          name: "Altay Roket Takımı",
-          slug: "altay-roket-takimi",
-          area: "TEKNOFEST - Roket Yarışmaları",
-          badge: "Aktif Takım",
-          order: 1,
-          featured: true,
-          image: "/logo.png",
-          description: "Roket tasarım ve üretimi yapan takımımız.",
-          members: [],
-          achievements: [],
-          technologies: [],
-          gallery: [],
-          sponsors: [],
-        },
-      ];
-      setTakimlar(dummyData);
-      localStorage.setItem("takimlar", JSON.stringify(dummyData));
-    }
-  }, []);
+  const refreshLists = async () => {
+    const [active, deleted] = await Promise.all([
+      getActiveItems("takimlar"),
+      getDeletedItems("takimlar"),
+    ]);
+    setTakimlar(active.sort((a, b) => (a.order || 999) - (b.order || 999)));
+    setDeletedTeams(deleted);
+  };
 
-  // Soft delete takım
-  const handleDelete = (id) => {
-    if (
-      window.confirm(
-        "Bu takımı silmek istediğinizden emin misiniz? (Geri alınabilir)"
-      )
-    ) {
-      const takim = takimlar.find((t) => String(t.id) === String(id));
-      softDeleteItem("takimlar", id);
+  useEffect(() => { refreshLists(); }, []);
 
-      // Log the action
-      createLog("delete", "takim", id, {
-        before: takim,
-        after: { ...takim, isDeleted: true },
-      });
-
-      // Refresh lists
-      const active = getActiveItems("takimlar");
-      const sorted = active.sort((a, b) => (a.order || 999) - (b.order || 999));
-      setTakimlar(sorted);
-      setDeletedTeams(getDeletedItems("takimlar"));
+  const handleDelete = async (id) => {
+    if (window.confirm("Bu takımı silmek istediğinizden emin misiniz? (Geri alınabilir)")) {
+      await softDeleteItem("takimlar", id);
+      createLog("delete", "takim", id);
+      refreshLists();
     }
   };
 
-  // Restore deleted takım
-  const handleRestore = (id) => {
-    restoreItem("takimlar", id);
+  const _handleRestore = async (id) => {
+    await restoreItem("takimlar", id);
     createLog("restore", "takim", id);
-    const active = getActiveItems("takimlar");
-    const sorted = active.sort((a, b) => (a.order || 999) - (b.order || 999));
-    setTakimlar(sorted);
-    setDeletedTeams(getDeletedItems("takimlar"));
+    refreshLists();
   };
 
   // Bulk operations
-  const handleBulkDelete = () => {
+  const handleBulkDelete = async () => {
     if (selectedItems.length === 0) return;
-    if (
-      window.confirm(
-        `${selectedItems.length} takımı silmek istediğinizden emin misiniz?`
-      )
-    ) {
-      bulkDelete("takimlar", selectedItems);
-      selectedItems.forEach((id) => {
-        createLog("delete", "takim", id);
-      });
+    if (window.confirm(`${selectedItems.length} takımı silmek istediğinizden emin misiniz?`)) {
+      await bulkDelete("takimlar", selectedItems);
+      selectedItems.forEach(id => createLog("delete", "takim", id));
       setSelectedItems([]);
       setSelectMode(false);
-      const active = getActiveItems("takimlar");
-      const sorted = active.sort((a, b) => (a.order || 999) - (b.order || 999));
-      setTakimlar(sorted);
+      refreshLists();
     }
   };
 
-  const handleBulkToggleFeatured = () => {
+  const handleBulkToggleFeatured = async () => {
     if (selectedItems.length === 0) return;
-    bulkToggleFeature("takimlar", selectedItems, "featured");
-    selectedItems.forEach((id) => {
-      createLog("update", "takim", id, { field: "featured" });
-    });
+    await bulkToggleFeature("takimlar", selectedItems, "featured");
+    selectedItems.forEach(id => createLog("update", "takim", id, { field: "featured" }));
     setSelectedItems([]);
     setSelectMode(false);
-    const active = getActiveItems("takimlar");
-    const sorted = active.sort((a, b) => (a.order || 999) - (b.order || 999));
-    setTakimlar(sorted);
+    refreshLists();
   };
 
   const toggleSelectItem = (id) => {

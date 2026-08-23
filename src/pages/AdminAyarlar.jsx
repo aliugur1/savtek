@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { getSettings, saveSettings } from "../lib/dataService";
 import "../styles/admin.css";
 
 function AdminAyarlar() {
@@ -7,19 +8,8 @@ function AdminAyarlar() {
   });
   const [showSuccess, setShowSuccess] = useState(false);
 
-  // Load settings
   useEffect(() => {
-    const stored = localStorage.getItem("siteSettings");
-    if (stored) {
-      setSettings(JSON.parse(stored));
-    } else {
-      // Default settings
-      const defaultSettings = {
-        altYonetimCount: 20,
-      };
-      setSettings(defaultSettings);
-      localStorage.setItem("siteSettings", JSON.stringify(defaultSettings));
-    }
+    getSettings().then(setSettings);
   }, []);
 
   const handleChange = (e) => {
@@ -30,9 +20,9 @@ function AdminAyarlar() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    localStorage.setItem("siteSettings", JSON.stringify(settings));
+    await saveSettings(settings);
     setShowSuccess(true);
     setTimeout(() => setShowSuccess(false), 3000);
   };

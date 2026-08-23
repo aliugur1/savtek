@@ -1,0 +1,199 @@
+.galeri-page {
+  padding-top: 100px;
+  min-height: 100vh;
+  background-color: var(--bg-soft);
+  color: var(--text-main);
+}
+
+.galeri-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.galeri-header h1 {
+  font-size: 2.5rem;
+  color: var(--primary);
+  margin-bottom: 1rem;
+}
+
+.galeri-header p {
+  color: var(--text-main);
+  opacity: 0.8;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.galeri-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  padding: 0 20px 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.galeri-item {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow-soft);
+  aspect-ratio: 4/3;
+  cursor: pointer;
+}
+
+.galeri-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.galeri-item:hover img {
+  transform: scale(1.05);
+}
+
+.galeri-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 20px;
+  background: linear-gradient(transparent, rgba(0,0,0,0.8));
+  color: #fff;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.galeri-item:hover .galeri-overlay {
+  opacity: 1;
+}
+
+.galeri-overlay h3 {
+  margin: 0 0 5px 0;
+  font-size: 1.2rem;
+}
+
+.galeri-overlay p {
+  margin: 0;
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+.galeri-zoom-icon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(0,0,0,0.5);
+  color: #fff;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+.galeri-item:hover .galeri-zoom-icon { opacity: 1; }
+
+.skeleton {
+  background: linear-gradient(90deg, var(--bg-soft) 25%, var(--card-bg) 50%, var(--bg-soft) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+  border-radius: 12px;
+}
+@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+/* ── Lightbox ── */
+.lightbox-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.92);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.lightbox-content {
+  position: relative;
+  max-width: 90vw;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.lightbox-img {
+  max-width: 100%;
+  max-height: 72vh;
+  border-radius: 10px;
+  object-fit: contain;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+}
+
+.lightbox-close {
+  position: fixed;
+  top: 18px;
+  right: 22px;
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+  z-index: 10000;
+}
+.lightbox-close:hover { background: rgba(255,255,255,0.28); }
+
+.lightbox-nav {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 52px;
+  height: 52px;
+  font-size: 30px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+  z-index: 10000;
+  line-height: 1;
+}
+.lightbox-nav:hover { background: rgba(255,255,255,0.28); }
+.lightbox-prev { left: 14px; }
+.lightbox-next { right: 14px; }
+
+.lightbox-caption {
+  text-align: center;
+  color: #fff;
+  margin-top: 14px;
+  padding: 0 16px;
+}
+.lightbox-caption h3 { font-size: 1.05rem; margin-bottom: 4px; font-weight: 600; }
+.lightbox-caption p { font-size: 0.88rem; opacity: 0.65; }
+
+.lightbox-counter {
+  color: rgba(255,255,255,0.4);
+  font-size: 0.82rem;
+  margin-top: 8px;
+  letter-spacing: 0.5px;
+}
+
+@media (max-width: 600px) {
+  .lightbox-nav { display: none; }
+  .lightbox-img { max-height: 62vh; }
+  .galeri-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; }
+}

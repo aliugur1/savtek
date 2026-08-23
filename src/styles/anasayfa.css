@@ -19,7 +19,7 @@ html {
 .hero-anka {
   min-height: 85vh;
   width: 100%;
-  padding-top: 60px;
+  padding-top: 0;
   background-image: url("/hero-anka.png");
   background-size: cover;
   background-repeat: no-repeat;
@@ -28,14 +28,18 @@ html {
   align-items: center;
   justify-content: center;
   position: relative;
+  overflow: hidden;
 }
 
 .hero-anka::after {
-  padding-bottom: 40px;
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
   background: linear-gradient(
     to bottom,
-    rgba(255, 255, 255, 0) 70%,
-    rgba(255, 255, 255, 0.85) 100%
+    rgba(0, 0, 0, 0.15) 0%,
+    rgba(0, 0, 0, 0.45) 100%
   );
 }
 
@@ -44,6 +48,8 @@ html {
   text-align: center;
   padding: 40px 20px;
   backdrop-filter: blur(2px);
+  position: relative;
+  z-index: 1;
 }
 
 .hero-uni {
@@ -100,7 +106,7 @@ html {
 .hero-text h2 {
   font-size: 36px;
   line-height: 1.3;
-  color: #111;
+  color: var(--text-main);
 }
 
 .hero-text h2 span {
@@ -111,7 +117,8 @@ html {
   max-width: 680px;
   font-size: 15.5px;
   line-height: 1.7;
-  color: #444;
+  color: var(--text-main);
+  opacity: 0.75;
 }
 
 .hero-actions {
@@ -188,62 +195,6 @@ html {
   filter: brightness(1);
 }
 
-/* VARSAYILAN: Takımlarımızı Keşfet turuncu */
-.btn-primary {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 12px 22px;
-  border-radius: 10px;
-  font-size: 14.5px;
-  font-weight: 500;
-  text-decoration: none;
-  background: linear-gradient(135deg, #ff9900, #ff5500);
-  color: #fff;
-  box-shadow: 0 10px 24px rgba(255, 120, 0, 0.35);
-  border: none;
-  transition: all 0.3s ease;
-}
-
-/* VARSAYILAN: Etkinliklerimizi İncele beyaz */
-.btn-secondary {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 12px 22px;
-  border-radius: 10px;
-  font-size: 14.5px;
-  font-weight: 500;
-  text-decoration: none;
-  background: #fff;
-  color: #333;
-  border: 1px solid rgba(0, 0, 0, 0.14);
-  transition: all 0.3s ease;
-}
-
-/* HOVER: secondary üzerindeyken, primary beyazlaşır */
-.btn-secondary:hover {
-  background: linear-gradient(135deg, #ff9900, #ff5500);
-  color: #fff;
-  border-color: transparent;
-  transform: translateY(-2px);
-  box-shadow: 0 10px 24px rgba(255, 120, 0, 0.35);
-}
-
-.hero-actions:has(.btn-secondary:hover) .btn-primary {
-  background: #fff;
-  color: #333;
-  border: 1px solid rgba(0, 0, 0, 0.14);
-  box-shadow: none;
-  transform: none;
-}
-
-/* HOVER: primary üzerindeyken turuncu kalır (zaten turuncu) */
-.btn-primary:hover {
-  transform: translateY(-2px);
-  filter: brightness(1.05);
-  box-shadow: 0 14px 32px rgba(255, 120, 0, 0.45);
-}
 
 .hero-stats {
   display: flex;
@@ -260,14 +211,14 @@ html {
 }
 
 .hero-split {
-  width: 100vw;
+  width: 100%;
   max-width: 1400px;
   margin: 0 auto;
   display: grid;
   grid-template-columns: 1.1fr 0.9fr;
   gap: 80px;
-  min-height: 115vh;
-  padding: 200px 140px;
+  min-height: auto;
+  padding: 80px 80px;
   box-sizing: border-box;
   align-items: center;
 }
@@ -279,10 +230,10 @@ html {
 }
 
 .hero-text-left h2 {
-  font-size: 52px;
+  font-size: 46px;
   line-height: 1.12;
   font-weight: 700;
-  color: #111;
+  color: var(--text-main);
 }
 
 .hero-text-left h2 span {
@@ -290,10 +241,11 @@ html {
 }
 
 .hero-text-left p {
-  max-width: 620px;
-  font-size: 17.5px;
+  max-width: 580px;
+  font-size: 17px;
   line-height: 1.7;
-  color: #444;
+  color: var(--text-main);
+  opacity: 0.72;
 }
 
 .hero-text-right {
@@ -353,7 +305,7 @@ html {
   transform: translateX(-50%);
   display: flex;
   gap: 16px;
-  z-index: 5;
+  z-index: 2;
 }
 
 /* Daire */
@@ -385,8 +337,8 @@ html {
 
 /* HAKKIMIZDA BÖLÜMÜ */
 .home-about {
-  padding: 120px 20px;
-  background: #ffffff;
+  padding: 100px 20px;
+  background: var(--bg-main);
 }
 
 .home-about-inner {
@@ -409,12 +361,14 @@ html {
 .about-text h2 {
   font-size: 36px;
   margin: 18px 0 20px;
+  color: var(--text-main);
 }
 
 .about-text p {
   font-size: 16px;
   line-height: 1.8;
-  color: #555;
+  color: var(--text-main);
+  opacity: 0.72;
   max-width: 560px;
 }
 
@@ -449,34 +403,44 @@ html {
 }
 
 .highlight-item {
-  background: #fafafa;
+  background: var(--bg-soft);
   border-radius: 14px;
-  padding: 16px 14px;
+  padding: 18px 16px;
   text-align: left;
+  border: 1px solid var(--border-color);
 }
 
 .highlight-icon {
-  font-size: 22px;
-  display: block;
-  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  width: 36px;
+  height: 36px;
+  background: rgba(255, 140, 0, 0.1);
+  border-radius: 8px;
+  padding: 7px;
 }
 
 .highlight-item h4 {
-  font-size: 15px;
+  font-size: 14px;
+  font-weight: 600;
   margin-bottom: 6px;
+  color: var(--text-main);
 }
 
 .highlight-item p {
   font-size: 13px;
   line-height: 1.6;
-  color: #666;
+  color: var(--text-main);
+  opacity: 0.65;
 }
 
 /* TEK GÜÇLÜ CÜMLE */
 .about-one-liner {
   margin-top: 16px;
   font-size: 15px;
-  color: #333;
+  color: var(--text-main);
+  opacity: 0.8;
   font-style: italic;
 }
 
@@ -489,11 +453,12 @@ html {
 }
 
 .stat-item {
-  background: #fafafa;
+  background: var(--bg-soft);
   padding: 30px 26px;
   border-radius: 18px;
   text-align: center;
-  min-width: 150px;
+  min-width: 140px;
+  border: 1px solid var(--border-color);
 }
 
 .stat-item h3 {
@@ -504,13 +469,14 @@ html {
 
 .stat-item span {
   font-size: 14px;
-  color: #777;
+  color: var(--text-main);
+  opacity: 0.65;
 }
 
 /* EKİP BÖLÜMÜ */
 .team-section {
   padding: 80px 20px;
-  background: #fff;
+  background: var(--bg-soft);
 }
 
 .team-header {
@@ -534,10 +500,11 @@ html {
 
 .team-card {
   width: 280px;
-  background: #fff;
+  background: var(--card-bg);
   border-radius: 14px;
   overflow: hidden;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--shadow-soft);
+  border: 1px solid var(--border-color);
 }
 
 .team-image {
@@ -613,7 +580,8 @@ html {
 
 .team-info span {
   font-size: 13px;
-  color: #777;
+  color: var(--text-main);
+  opacity: 0.6;
 }
 
 /* BUTON */
@@ -627,7 +595,7 @@ html {
 ========================== */
 .home-teams {
   padding: 100px 40px;
-  background: #fff;
+  background: var(--bg-main);
 }
 
 .teams-grid {
@@ -638,11 +606,14 @@ html {
 }
 
 .team-card-home {
-  background: #fafafa;
+  background: var(--bg-soft);
   padding: 32px 28px;
   border-radius: 16px;
-  border: 2px solid rgba(255, 140, 0, 0.1);
+  border: 2px solid var(--border-color);
   transition: all 0.3s ease;
+  text-decoration: none;
+  color: inherit;
+  display: block;
 }
 
 .team-card-home:hover {
@@ -662,16 +633,17 @@ html {
 }
 
 .team-card-home h4 {
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 700;
-  color: #111;
-  margin-bottom: 12px;
+  color: var(--text-main);
+  margin-bottom: 10px;
 }
 
 .team-card-home p {
   font-size: 15px;
   line-height: 1.6;
-  color: #666;
+  color: var(--text-main);
+  opacity: 0.65;
   margin-bottom: 16px;
 }
 
@@ -736,12 +708,13 @@ html {
 .section-header h2 {
   font-size: 38px;
   margin-bottom: 16px;
-  color: #111;
+  color: var(--text-main);
 }
 
 .section-header p {
   font-size: 16px;
-  color: #666;
+  color: var(--text-main);
+  opacity: 0.65;
   max-width: 700px;
   margin: 0 auto;
   line-height: 1.7;
@@ -752,21 +725,22 @@ html {
 ========================== */
 .home-etkinlikler {
   padding: 100px 40px;
-  background: #fafafa;
+  background: var(--bg-soft);
 }
 
 .etkinlik-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 32px;
   margin-bottom: 48px;
 }
 
 .etkinlik-card-home {
-  background: #fff;
+  background: var(--card-bg);
   border-radius: 16px;
   padding: 28px 24px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--shadow-soft);
+  border: 1px solid var(--border-color);
   transition: all 0.3s ease;
 }
 
@@ -789,17 +763,18 @@ html {
 }
 
 .etkinlik-card-home h3 {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 700;
-  color: #111;
-  margin-bottom: 12px;
+  color: var(--text-main);
+  margin-bottom: 10px;
   line-height: 1.3;
 }
 
 .etkinlik-card-home p {
-  font-size: 15px;
+  font-size: 14.5px;
   line-height: 1.6;
-  color: #666;
+  color: var(--text-main);
+  opacity: 0.65;
   margin-bottom: 12px;
 }
 
@@ -832,7 +807,7 @@ html {
 ========================== */
 .home-contact {
   padding: 100px 20px;
-  background: linear-gradient(135deg, #fafafa 0%, #ffffff 100%);
+  background: var(--bg-soft);
 }
 
 .contact-grid {
@@ -851,15 +826,17 @@ html {
 }
 
 .contact-item h4 {
-  font-size: 18px;
-  color: #111;
-  margin-bottom: 10px;
+  font-size: 17px;
+  color: var(--text-main);
+  margin-bottom: 8px;
+  font-weight: 600;
 }
 
 .contact-item p {
   font-size: 15px;
   line-height: 1.8;
-  color: #666;
+  color: var(--text-main);
+  opacity: 0.7;
 }
 
 .contact-item a {
@@ -935,10 +912,19 @@ html {
 
 /* FORM */
 .contact-form {
-  background: #fff;
+  background: var(--card-bg);
   padding: 36px;
   border-radius: 16px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--shadow-soft);
+  border: 1px solid var(--border-color);
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-main);
 }
 
 .form-group {
@@ -949,20 +935,21 @@ html {
 .form-group textarea {
   width: 100%;
   padding: 14px 16px;
-  border: 1px solid rgba(0, 0, 0, 0.12);
+  border: 1px solid var(--border-color);
   border-radius: 10px;
   font-size: 15px;
   font-family: inherit;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
-  background: #fafafa;
+  background: var(--bg-soft);
+  color: var(--text-main);
 }
 
 .form-group input:focus,
 .form-group textarea:focus {
   outline: none;
   border-color: #ff8c00;
-  box-shadow: 0 0 0 3px rgba(255, 140, 0, 0.1);
-  background: #fff;
+  box-shadow: 0 0 0 3px rgba(255, 140, 0, 0.12);
+  background: var(--bg-main);
 }
 
 .form-group textarea {
@@ -988,14 +975,16 @@ html {
   font-weight: 500;
 }
 
-.submit-message:contains("✅") {
+.submit-message.success {
   background: rgba(34, 197, 94, 0.1);
   color: #16a34a;
+  border: 1px solid rgba(34, 197, 94, 0.25);
 }
 
-.submit-message:contains("❌") {
+.submit-message.error {
   background: rgba(239, 68, 68, 0.1);
   color: #dc2626;
+  border: 1px solid rgba(239, 68, 68, 0.25);
 }
 
 /* ✅ MOBİL DÜZELTME (KRİTİK) */
@@ -1168,7 +1157,12 @@ html {
   }
 
   .about-stats {
-    justify-content: flex-start;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .stat-item {
+    min-width: unset;
   }
 
   /* GRID → TEK KOLON */
@@ -1326,18 +1320,20 @@ html {
 a.btn-outline,
 .about-content .btn-outline,
 .team-cta .btn-outline {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   margin-top: 24px;
-  padding: 12px 28px;
+  padding: 13px 28px;
   border-radius: 30px;
-  border: 2px solid #ff8c00 !important;
-  color: #fff !important;
-  background: #ff8c00 !important;
-  text-decoration: none !important;
+  border: 2px solid #ff8c00;
+  color: #fff;
+  background: linear-gradient(135deg, #ff9900, #ff6600);
+  text-decoration: none;
   font-weight: 600;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  font-size: 16px;
+  box-shadow: 0 6px 18px rgba(255, 120, 0, 0.32);
+  font-size: 15px;
   line-height: 1.5;
   text-align: center;
 }
@@ -1346,12 +1342,74 @@ a.btn-outline,
 a.btn-outline:hover,
 .about-content .btn-outline:hover,
 .team-cta .btn-outline:hover {
-  background: #ff6600 !important;
-  border-color: #ff6600 !important;
+  filter: brightness(1.08);
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(255, 140, 0, 0.4);
-  color: #fff !important;
-  text-decoration: none !important;
+  box-shadow: 0 10px 26px rgba(255, 120, 0, 0.45);
+}
+
+/* =========================
+   SSS (FAQ)
+========================== */
+.home-faq {
+  padding: 80px 20px;
+  background: var(--bg-main);
+}
+
+.faq-list {
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.faq-item {
+  padding: 20px 22px;
+  border-radius: 12px;
+  background: var(--bg-soft);
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.faq-item[open] {
+  border-color: rgba(255, 140, 0, 0.4);
+  box-shadow: 0 4px 16px rgba(255, 140, 0, 0.1);
+}
+
+.faq-item summary {
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--text-main);
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.faq-item summary::-webkit-details-marker { display: none; }
+
+.faq-item summary::after {
+  content: "+";
+  font-size: 20px;
+  font-weight: 400;
+  color: #ff8c00;
+  flex-shrink: 0;
+  transition: transform 0.25s ease;
+}
+
+.faq-item[open] summary::after {
+  transform: rotate(45deg);
+}
+
+.faq-item p {
+  margin-top: 14px;
+  color: var(--text-main);
+  opacity: 0.75;
+  line-height: 1.7;
+  font-size: 15px;
 }
 
 /* Team CTA specific - center the button */
@@ -1372,17 +1430,19 @@ a.btn-outline:hover,
 .btn-primary,
 .btn-primary-active,
 a.btn-primary {
-  display: inline-block;
-  padding: 14px 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 13px 28px;
   border-radius: 30px;
-  background: #ff8c00 !important;
-  color: #fff !important;
-  text-decoration: none !important;
+  background: linear-gradient(135deg, #ff9900, #ff6600);
+  color: #fff;
+  text-decoration: none;
   font-weight: 600;
-  font-size: 16px;
-  border: 2px solid #ff8c00 !important;
+  font-size: 15px;
+  border: 2px solid transparent;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 6px 18px rgba(255, 120, 0, 0.32);
   cursor: pointer;
   text-align: center;
 }
@@ -1390,28 +1450,28 @@ a.btn-primary {
 .btn-primary:hover,
 .btn-primary-active:hover,
 a.btn-primary:hover {
-  background: #ff6600 !important;
-  border-color: #ff6600 !important;
+  filter: brightness(1.08);
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(255, 140, 0, 0.4);
-  color: #fff !important;
+  box-shadow: 0 10px 26px rgba(255, 120, 0, 0.45);
 }
 
 /* SECONDARY BUTTON - White with orange border */
 .btn-secondary,
 .btn-secondary-hover,
 a.btn-secondary {
-  display: inline-block;
-  padding: 14px 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 13px 28px;
   border-radius: 30px;
-  background: #fff !important;
-  color: #ff8c00 !important;
-  text-decoration: none !important;
+  background: var(--card-bg);
+  color: #ff8c00;
+  text-decoration: none;
   font-weight: 600;
-  font-size: 16px;
-  border: 2px solid #ff8c00 !important;
+  font-size: 15px;
+  border: 2px solid #ff8c00;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
   cursor: pointer;
   text-align: center;
 }
@@ -1419,11 +1479,11 @@ a.btn-secondary {
 .btn-secondary:hover,
 .btn-secondary-hover:hover,
 a.btn-secondary:hover {
-  background: #ff8c00 !important;
-  color: #fff !important;
-  border-color: #ff8c00 !important;
+  background: #ff8c00;
+  color: #fff;
+  border-color: #ff8c00;
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(255, 140, 0, 0.4);
+  box-shadow: 0 8px 20px rgba(255, 140, 0, 0.4);
 }
 
 /* Hero specific buttons side by side */

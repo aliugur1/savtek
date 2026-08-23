@@ -2,69 +2,76 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
+  Navigate,
   useLocation,
 } from "react-router-dom";
-import { AnimatePresence, motion } from "framer-motion";
-import { lazy, Suspense } from "react";
+import { AnimatePresence } from "framer-motion";
+import { Suspense, lazy } from "react";
+import { AuthProvider } from "./context/AuthProvider.jsx";
 import LoadingSpinner from "./components/LoadingSpinner.jsx";
 
-// Components
+// Components (sync — always needed)
 import Navbar from "./components/Navbar.jsx";
 import ScrollToTop from "./components/ScrollToTop.jsx";
 import Footer from "./components/Footer.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
+import TeamProtectedRoute from "./components/TeamProtectedRoute.jsx";
 import MobileBlocker from "./components/MobileBlocker.jsx";
 import AdminLayout from "./components/AdminLayout.jsx";
+import AnnouncementBanner from "./components/AnnouncementBanner.jsx";
 import ErrorBoundary from "./components/ErrorBoundary.jsx";
 import KVKKConsent from "./components/KVKKConsent.jsx";
 import GoogleAnalytics from "./components/GoogleAnalytics.jsx";
 import SkipToContent from "./components/SkipToContent.jsx";
 
-// Public Pages
-import Anasayfa from "./pages/Anasayfa.jsx";
-import Hakkimizda from "./pages/Hakkimizda.jsx";
-import Ekip from "./pages/Ekip.jsx";
-import Etkinlik from "./pages/Etkinlik.jsx";
-import EtkinlikDetay from "./pages/EtkinlikDetay.jsx";
-import TG from "./pages/TG.jsx";
-import Takimlar from "./pages/Takim.jsx";
-import TakimDetay from "./pages/TakimDetay.jsx";
-import NotFound from "./pages/NotFound.jsx";
-import Gizlilik from "./pages/Gizlilik.jsx";
+// Public Pages — lazy loaded
+const Anasayfa = lazy(() => import("./pages/Anasayfa.jsx"));
+const Hakkimizda = lazy(() => import("./pages/Hakkimizda.jsx"));
+const Ekip = lazy(() => import("./pages/Ekip.jsx"));
+const Etkinlik = lazy(() => import("./pages/Etkinlik.jsx"));
+const EtkinlikDetay = lazy(() => import("./pages/EtkinlikDetay.jsx"));
+const TG = lazy(() => import("./pages/TG.jsx"));
+const Takimlar = lazy(() => import("./pages/Takim.jsx"));
+const TakimDetay = lazy(() => import("./pages/TakimDetay.jsx"));
+const NotFound = lazy(() => import("./pages/NotFound.jsx"));
+const Gizlilik = lazy(() => import("./pages/Gizlilik.jsx"));
+const Panel = lazy(() => import("./pages/Panel.jsx"));
+const Giris = lazy(() => import("./pages/Giris.jsx"));
+const Galeri = lazy(() => import("./pages/Galeri.jsx"));
 
-// Admin Pages
-import Login from "./pages/Login.jsx";
-import Dashboard from "./pages/Dashboard.jsx";
-import AdminTakimlar from "./pages/AdminTakimlar.jsx";
-import AdminTakimForm from "./pages/AdminTakimForm.jsx";
-import AdminEtkinlikler from "./pages/AdminEtkinlikler.jsx";
-import AdminEtkinlikForm from "./pages/AdminEtkinlikForm.jsx";
-import AdminEkip from "./pages/AdminEkip.jsx";
-import AdminEkipForm from "./pages/AdminEkipForm.jsx";
-import AdminSponsorlar from "./pages/AdminSponsorlar.jsx";
-import AdminSponsorForm from "./pages/AdminSponsorForm.jsx";
-import AdminAyarlar from "./pages/AdminAyarlar.jsx";
-import AdminLogs from "./pages/AdminLogs.jsx";
+// Admin Pages — lazy loaded
+const Login = lazy(() => import("./pages/Login.jsx"));
+const Dashboard = lazy(() => import("./pages/Dashboard.jsx"));
+const AdminTakimlar = lazy(() => import("./pages/AdminTakimlar.jsx"));
+const AdminTakimForm = lazy(() => import("./pages/AdminTakimForm.jsx"));
+const AdminEtkinlikler = lazy(() => import("./pages/AdminEtkinlikler.jsx"));
+const AdminEtkinlikForm = lazy(() => import("./pages/AdminEtkinlikForm.jsx"));
+const AdminEkip = lazy(() => import("./pages/AdminEkip.jsx"));
+const AdminEkipForm = lazy(() => import("./pages/AdminEkipForm.jsx"));
+const AdminSponsorlar = lazy(() => import("./pages/AdminSponsorlar.jsx"));
+const AdminSponsorForm = lazy(() => import("./pages/AdminsponsorForm.jsx"));
+const AdminAyarlar = lazy(() => import("./pages/AdminAyarlar.jsx"));
+const AdminLogs = lazy(() => import("./pages/AdminLogs.jsx"));
+const AdminDokumanlar = lazy(() => import("./pages/AdminDokumanlar.jsx"));
+const AdminGaleri = lazy(() => import("./pages/AdminGaleri.jsx"));
+const AdminGaleriForm = lazy(() => import("./pages/AdminGaleriForm.jsx"));
+const AdminProjeler = lazy(() => import("./pages/AdminProjeler.jsx"));
+const AdminProjeForm = lazy(() => import("./pages/AdminProjeForm.jsx"));
+const AdminDuyurular = lazy(() => import("./pages/AdminDuyurular.jsx"));
+const AdminDuyuruForm = lazy(() => import("./pages/AdminDuyuruForm.jsx"));
+const AdminBasvurular = lazy(() => import("./pages/AdminBasvurular.jsx"));
+const Duyurular = lazy(() => import("./pages/Duyurular.jsx"));
+const Basvuru = lazy(() => import("./pages/Basvuru.jsx"));
+const Projeler = lazy(() => import("./pages/Projeler.jsx"));
 
-// Page Animation Wrapper
 function Page({ children }) {
   return (
-    <Suspense
-      fallback={<LoadingSpinner fullScreen message="Sayfa yükleniyor..." />}
-    >
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -20 }}
-        transition={{ duration: 0.3, ease: "easeInOut" }}
-      >
-        {children}
-      </motion.div>
+    <Suspense fallback={<LoadingSpinner fullScreen message="Sayfa yükleniyor..." />}>
+      {children}
     </Suspense>
   );
 }
 
-// Animated Routes
 function AnimatedRoutes() {
   const location = useLocation();
 
@@ -72,138 +79,50 @@ function AnimatedRoutes() {
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
         {/* PUBLIC ROUTES */}
+        <Route path="/" element={<Page><Anasayfa /></Page>} />
+        <Route path="/hakkimizda" element={<Page><Hakkimizda /></Page>} />
 
-        {/* Ana Sayfa */}
-        <Route
-          path="/"
-          element={
-            <Page>
-              <Anasayfa />
-            </Page>
-          }
-        />
+        <Route path="/ekip" element={<Page><Ekip /></Page>} />
+        <Route path="/ekibimiz" element={<Navigate to="/ekip" replace />} />
 
-        {/* Hakkımızda */}
-        <Route
-          path="/hakkimizda"
-          element={
-            <Page>
-              <Hakkimizda />
-            </Page>
-          }
-        />
+        <Route path="/etkinlikler" element={<Page><Etkinlik /></Page>} />
+        <Route path="/etkinliklerimiz" element={<Navigate to="/etkinlikler" replace />} />
+        <Route path="/etkinlikler/:slug" element={<Page><EtkinlikDetay /></Page>} />
 
-        {/* Ekip */}
-        <Route
-          path="/ekip"
-          element={
-            <Page>
-              <Ekip />
-            </Page>
-          }
-        />
-        <Route
-          path="/ekibimiz"
-          element={
-            <Page>
-              <Ekip />
-            </Page>
-          }
-        />
+        <Route path="/tg" element={<Page><TG /></Page>} />
+        <Route path="/tg/tg25" element={<Page><TG /></Page>} />
 
-        {/* Etkinlikler */}
-        <Route
-          path="/etkinlikler"
-          element={
-            <Page>
-              <Etkinlik />
-            </Page>
-          }
-        />
-        <Route
-          path="/etkinliklerimiz"
-          element={
-            <Page>
-              <Etkinlik />
-            </Page>
-          }
-        />
-        <Route
-          path="/etkinlikler/:slug"
-          element={
-            <Page>
-              <EtkinlikDetay />
-            </Page>
-          }
-        />
+        <Route path="/takimlar" element={<Page><Takimlar /></Page>} />
+        <Route path="/takimlarimiz" element={<Navigate to="/takimlar" replace />} />
+        <Route path="/takimlar/:slug" element={<Page><TakimDetay /></Page>} />
 
-        {/* TG (Teknoloji Günü) */}
-        <Route
-          path="/tg"
-          element={
-            <Page>
-              <TG />
-            </Page>
-          }
-        />
-        <Route
-          path="/tg/tg25"
-          element={
-            <Page>
-              <TG />
-            </Page>
-          }
-        />
+        <Route path="/gizlilik" element={<Page><Gizlilik /></Page>} />
+        <Route path="/giris" element={<Page><Giris /></Page>} />
+        <Route path="/galeri" element={<Page><Galeri /></Page>} />
+        <Route path="/duyurular" element={<Page><Duyurular /></Page>} />
+        <Route path="/basvuru" element={<Page><Basvuru /></Page>} />
+        <Route path="/projeler" element={<Page><Projeler /></Page>} />
 
-        {/* Takımlar */}
+        {/* TEAM PANEL */}
         <Route
-          path="/takimlar"
+          path="/panel"
           element={
-            <Page>
-              <Takimlar />
-            </Page>
-          }
-        />
-        <Route
-          path="/takimlarimiz"
-          element={
-            <Page>
-              <Takimlar />
-            </Page>
-          }
-        />
-        <Route
-          path="/takimlar/:slug"
-          element={
-            <Page>
-              <TakimDetay />
-            </Page>
-          }
-        />
-        <Route
-          path="/gizlilik"
-          element={
-            <Page>
-              <Gizlilik />
-            </Page>
+            <TeamProtectedRoute>
+              <Page><Panel /></Page>
+            </TeamProtectedRoute>
           }
         />
 
         {/* ADMIN ROUTES */}
-
-        {/* Admin Login - Mobile Blocked */}
         <Route
           path="/admin/login"
           element={
             <MobileBlocker>
-              <Page>
-                <Login />
-              </Page>
+              <Page><Login /></Page>
             </MobileBlocker>
           }
         />
 
-        {/* Admin Panel - Protected & Mobile Blocked */}
         <Route
           path="/admin"
           element={
@@ -214,87 +133,83 @@ function AnimatedRoutes() {
             </MobileBlocker>
           }
         >
-          {/* Dashboard - Index Route */}
           <Route index element={<Dashboard />} />
-
-          {/* Takımlar */}
           <Route path="takimlar" element={<AdminTakimlar />} />
           <Route path="takimlar/yeni" element={<AdminTakimForm />} />
           <Route path="takimlar/duzenle/:id" element={<AdminTakimForm />} />
-
-          {/* Etkinlikler */}
           <Route path="etkinlikler" element={<AdminEtkinlikler />} />
           <Route path="etkinlikler/yeni" element={<AdminEtkinlikForm />} />
-          <Route
-            path="etkinlikler/duzenle/:id"
-            element={<AdminEtkinlikForm />}
-          />
-
-          {/* Ekip */}
+          <Route path="etkinlikler/duzenle/:id" element={<AdminEtkinlikForm />} />
           <Route path="ekip" element={<AdminEkip />} />
           <Route path="ekip/yeni" element={<AdminEkipForm />} />
           <Route path="ekip/duzenle/:id" element={<AdminEkipForm />} />
-
-          {/* Sponsorlar */}
           <Route path="sponsorlar" element={<AdminSponsorlar />} />
           <Route path="sponsorlar/yeni" element={<AdminSponsorForm />} />
           <Route path="sponsorlar/duzenle/:id" element={<AdminSponsorForm />} />
-
-          {/* Log Kayıtları */}
+          <Route path="galeri" element={<AdminGaleri />} />
+          <Route path="galeri/yeni" element={<AdminGaleriForm />} />
+          <Route path="galeri/duzenle/:id" element={<AdminGaleriForm />} />
+          <Route path="projeler" element={<AdminProjeler />} />
+          <Route path="projeler/yeni" element={<AdminProjeForm />} />
+          <Route path="projeler/duzenle/:id" element={<AdminProjeForm />} />
+          <Route path="duyurular" element={<AdminDuyurular />} />
+          <Route path="duyurular/yeni" element={<AdminDuyuruForm />} />
+          <Route path="duyurular/duzenle/:id" element={<AdminDuyuruForm />} />
+          <Route path="basvurular" element={<AdminBasvurular />} />
+          <Route path="dokumanlar" element={<AdminDokumanlar />} />
           <Route path="logs" element={<AdminLogs />} />
-
-          {/* Ayarlar */}
           <Route path="ayarlar" element={<AdminAyarlar />} />
         </Route>
 
-        {/* 404 NOT FOUND */}
-        <Route
-          path="*"
-          element={
-            <Page>
-              <NotFound />
-            </Page>
-          }
-        />
+        {/* 404 */}
+        <Route path="*" element={<Page><NotFound /></Page>} />
       </Routes>
     </AnimatePresence>
   );
 }
 
-// App Content - Layout Controller
 function AppContent() {
   const location = useLocation();
   const isAdminPage = location.pathname.startsWith("/admin");
 
   return (
     <>
-      {/* Skip to Content - Accessibility */}
       {!isAdminPage && <SkipToContent />}
-
-      {/* Navbar - Hide on admin pages */}
       {!isAdminPage && <Navbar />}
-
-      {/* Main Content */}
+      {!isAdminPage && <AnnouncementBanner />}
       <AnimatedRoutes />
-
-      {/* Footer - Hide on admin pages */}
       {!isAdminPage && <Footer />}
-
-      {/* KVKK Consent Banner */}
       {!isAdminPage && <KVKKConsent />}
     </>
   );
 }
 
-// Main App Component
+import Preloader from "./components/Preloader.jsx";
+import { useState, useEffect } from "react";
+
 function App() {
+  const [isPreloading, setIsPreloading] = useState(true);
+
+  // Check if it's the first time the user visits the site in this session
+  useEffect(() => {
+    const hasPreloaded = sessionStorage.getItem("hasPreloaded");
+    if (hasPreloaded) {
+      setIsPreloading(false);
+    } else {
+      sessionStorage.setItem("hasPreloaded", "true");
+    }
+  }, []);
+
   return (
     <ErrorBoundary>
-      <Router>
-        <GoogleAnalytics />
-        <ScrollToTop />
-        <AppContent />
-      </Router>
+      <AuthProvider>
+        {isPreloading && <Preloader onComplete={() => setIsPreloading(false)} />}
+        <Router>
+          <GoogleAnalytics />
+          <ScrollToTop />
+          <AppContent />
+        </Router>
+      </AuthProvider>
     </ErrorBoundary>
   );
 }

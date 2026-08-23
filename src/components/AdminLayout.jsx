@@ -1,9 +1,11 @@
 import { NavLink, Outlet, useNavigate, useLocation } from "react-router-dom";
+import { useAuth } from "../context/useAuth";
 import "../styles/admin.css";
 
 function AdminLayout() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { signOut } = useAuth();
 
   const menuItems = [
     { name: "Genel Bakış", path: "/admin", icon: "🏠", exact: true },
@@ -11,14 +13,18 @@ function AdminLayout() {
     { name: "Etkinlikler", path: "/admin/etkinlikler", icon: "📅" },
     { name: "Ekip", path: "/admin/ekip", icon: "👥" },
     { name: "Sponsorlar", path: "/admin/sponsorlar", icon: "🤝" },
+    { name: "Galeri", path: "/admin/galeri", icon: "🖼️" },
+    { name: "Projeler", path: "/admin/projeler", icon: "🔬" },
+    { name: "Duyurular", path: "/admin/duyurular", icon: "🔔" },
+    { name: "Başvurular", path: "/admin/basvurular", icon: "📝" },
+    { name: "Dokümanlar", path: "/admin/dokumanlar", icon: "📄" },
     { name: "Log Kayıtları", path: "/admin/logs", icon: "📋" },
     { name: "Ayarlar", path: "/admin/ayarlar", icon: "⚙️" },
   ];
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     if (window.confirm("Çıkış yapmak istediğinizden emin misiniz?")) {
-      localStorage.removeItem("isAdmin");
-      localStorage.removeItem("adminToken");
+      await signOut();
       navigate("/admin/login");
     }
   };

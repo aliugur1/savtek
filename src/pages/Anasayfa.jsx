@@ -2,30 +2,33 @@ import { Link } from "react-router-dom";
 import { useRef, useState, useEffect } from "react";
 import emailjs from "@emailjs/browser";
 import Sponsors from "../components/Sponsors";
+import { getTeams, getEvents, getEkip } from "../lib/dataService";
 import "../styles/anasayfa.css";
 
 function Anasayfa() {
   const formRef = useRef();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitMessage, setSubmitMessage] = useState("");
+  const [submitMessage, setSubmitMessage] = useState({ text: "", success: false });
   const [featuredTeams, setFeaturedTeams] = useState([]);
   const [recentEvents, setRecentEvents] = useState([]);
+  const [yonetimEkibi, setYonetimEkibi] = useState([]);
 
-  // Featured takımları ve son 3 etkinliği yükle
   useEffect(() => {
-    // Takımları yükle
-    const takimlar = JSON.parse(localStorage.getItem("takimlar") || "[]");
-    const featured = takimlar
-      .filter((t) => t.featured === true)
-      .sort((a, b) => (a.order || 999) - (b.order || 999));
-    setFeaturedTeams(featured);
-
-    // Son 3 etkinliği yükle
-    const etkinlikler = JSON.parse(localStorage.getItem("etkinlikler") || "[]");
-    const sorted = etkinlikler
-      .sort((a, b) => new Date(b.date) - new Date(a.date))
-      .slice(0, 3);
-    setRecentEvents(sorted);
+    getTeams().then(teams => {
+      setFeaturedTeams(
+        teams.filter(t => t.featured).sort((a, b) => (a.order || 999) - (b.order || 999))
+      );
+    });
+    getEvents().then(events => {
+      setRecentEvents(
+        [...events].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 3)
+      );
+    });
+    getEkip().then(ekip => {
+      setYonetimEkibi(
+        ekip.filter(u => u.category === "Yönetim").sort((a, b) => (a.order || 999) - (b.order || 999))
+      );
+    });
   }, []);
 
   // EmailJS form submission
@@ -35,21 +38,18 @@ function Anasayfa() {
     setSubmitMessage("");
 
     // EmailJS credentials
-    const SERVICE_ID =
-      process.env.REACT_APP_EMAILJS_SERVICE_ID || "YOUR_SERVICE_ID";
-    const TEMPLATE_ID =
-      process.env.REACT_APP_EMAILJS_TEMPLATE_ID || "YOUR_TEMPLATE_ID";
-    const PUBLIC_KEY =
-      process.env.REACT_APP_EMAILJS_PUBLIC_KEY || "YOUR_PUBLIC_KEY";
+    const SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID || "";
+    const TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID || "";
+    const PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || "";
 
     emailjs
       .sendForm(SERVICE_ID, TEMPLATE_ID, formRef.current, PUBLIC_KEY)
       .then(() => {
-        setSubmitMessage("✅ Mesajınız başarıyla gönderildi!");
+        setSubmitMessage({ text: "Mesajınız başarıyla gönderildi!", success: true });
         formRef.current.reset();
       })
       .catch((error) => {
-        setSubmitMessage("❌ Bir hata oluştu. Lütfen tekrar deneyin.");
+        setSubmitMessage({ text: "Bir hata oluştu. Lütfen tekrar deneyin.", success: false });
         console.error("EmailJS Error:", error);
       })
       .finally(() => {
@@ -89,23 +89,6 @@ function Anasayfa() {
     },
   ];
 
-  // Team members data
-  const teamMembers = [
-    {
-      name: "Süleyman Arda CAN",
-      role: "Topluluk Başkanı",
-      image: "/baskan.png",
-      linkedin: "https://www.linkedin.com/in/s%C3%BCleyman-arda-can",
-      instagram: "https://www.instagram.com/arda.canm",
-    },
-    {
-      name: "Bilge AKIN",
-      role: "Başkan Yardımcısı",
-      image: "/baskanyardimcisi.png",
-      linkedin: "https://www.linkedin.com/in/bilge-ak%C4%B1n-387336339/",
-      instagram: "https://www.instagram.com/bilgeakin_",
-    },
-  ];
 
   return (
     <main className="home">
@@ -160,12 +143,15 @@ function Anasayfa() {
             <Link to="/takimlar" className="btn-primary btn-primary-active">
               Takımlarımızı keşfet
             </Link>
-            <Link
-              to="/etkinlikler"
+            <a
+              href="https://discord.gg/savtek"
+              target="_blank"
+              rel="noopener noreferrer"
               className="btn-secondary btn-secondary-hover"
+              style={{ backgroundColor: '#5865F2', color: 'white', border: 'none' }}
             >
-              Etkinliklerimizi incele
-            </Link>
+              Aramıza Katıl (Discord)
+            </a>
           </div>
 
           <div className="hero-stats">
@@ -202,21 +188,37 @@ function Anasayfa() {
 
             <div className="about-highlights">
               <div className="highlight-item">
-                <span className="highlight-icon">🛠</span>
+                <span className="highlight-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#ff8c00" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="22" height="22" aria-hidden="true">
+                    <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+                  </svg>
+                </span>
                 <h4>Proje Odaklı Çalışma</h4>
                 <p>Gerçek mühendislik problemlerine çözüm üreten takımlar.</p>
               </div>
 
               <div className="highlight-item">
-                <span className="highlight-icon">🚀</span>
+                <span className="highlight-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#ff8c00" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="22" height="22" aria-hidden="true">
+                    <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/>
+                    <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/>
+                    <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/>
+                    <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>
+                  </svg>
+                </span>
                 <h4>Yarışma & Ar-Ge</h4>
-                <p>
-                  TEKNOFEST ve TÜBİTAK projeleriyle ulusal arenada yer alıyoruz.
-                </p>
+                <p>TEKNOFEST ve TÜBİTAK projeleriyle ulusal arenada yer alıyoruz.</p>
               </div>
 
               <div className="highlight-item">
-                <span className="highlight-icon">💥</span>
+                <span className="highlight-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#ff8c00" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="22" height="22" aria-hidden="true">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                  </svg>
+                </span>
                 <h4>Takım Kültürü</h4>
                 <p>Disiplinler arası ekipler ile birlikte üretme deneyimi.</p>
               </div>
@@ -258,32 +260,27 @@ function Anasayfa() {
         </div>
 
         <div className="team-grid">
-          {teamMembers.map((member) => (
-            <div key={member.name} className="team-card">
+          {yonetimEkibi.map((member) => (
+            <div key={member.id} className="team-card">
               <div className="team-image">
-                <img src={member.image} alt={member.name} />
+                <img src={member.photo} alt={member.name} />
 
                 <div className="team-socials">
-                  <a
-                    href={member.linkedin}
-                    target="_blank"
-                    rel="noreferrer"
-                    aria-label="LinkedIn"
-                  >
+                  {member.linkedin && (
+                  <a href={member.linkedin} target="_blank" rel="noreferrer" aria-label="LinkedIn">
                     <svg viewBox="0 0 24 24" fill="currentColor">
                       <path d="M20.4 20.4h-3.6v-5.6c0-1.3 0-3-1.8-3-1.8 0-2.1 1.4-2.1 2.9v5.7H9.3V9h3.4v1.6h.1c.4-.9 1.6-1.8 3.3-1.8 3.6 0 4.3 2.4 4.3 5.4v6.2zM5.3 7.4c-1.2 0-2.1-.9-2.1-2.1s.9-2.1 2.1-2.1 2.1.9 2.1 2.1-.9 2.1-2.1 2.1zM7 20.4H3.5V9H7v11.4z" />
                     </svg>
                   </a>
-                  <a
-                    href={member.instagram}
-                    target="_blank"
-                    rel="noreferrer"
-                    aria-label="Instagram"
+                  )}
+                  {member.instagram && (
+                  <a href={member.instagram} target="_blank" rel="noreferrer" aria-label="Instagram"
                   >
                     <svg viewBox="0 0 24 24" fill="currentColor">
                       <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
                     </svg>
                   </a>
+                  )}
                 </div>
               </div>
 
@@ -341,10 +338,7 @@ function Anasayfa() {
               <div
                 style={{ textAlign: "center", padding: "40px", color: "#666" }}
               >
-                <p>
-                  Henüz öne çıkan takım seçilmemiş. Admin panelden takımları öne
-                  çıkarabilirsiniz.
-                </p>
+                <p>Yakında takımlarımızı burada görebileceksiniz.</p>
               </div>
             )}
           </div>
@@ -410,10 +404,7 @@ function Anasayfa() {
                   gridColumn: "1 / -1",
                 }}
               >
-                <p>
-                  Henüz etkinlik eklenmemiş. Admin panelden etkinlik
-                  ekleyebilirsiniz.
-                </p>
+                <p>Yaklaşan etkinliklerimiz için bizi takip edin.</p>
               </div>
             )}
           </div>
@@ -422,6 +413,32 @@ function Anasayfa() {
             <Link to="/etkinlikler" className="btn-outline">
               Tüm Etkinlikleri Gör →
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ========================================
+          SSS (Sıkça Sorulan Sorular)
+      ======================================== */}
+      <section className="home-faq">
+        <div className="container">
+          <div className="section-header">
+            <span className="section-label">SSS</span>
+            <h2>Sıkça Sorulan Sorular</h2>
+            <p>Topluluğumuz hakkında merak ettiğiniz soruların cevapları.</p>
+          </div>
+
+          <div className="faq-list">
+            {[
+              { q: "Topluluğa kimler katılabilir?", a: "Konya Teknik Üniversitesi'nde okuyan ve savunma sanayii, teknoloji ve mühendisliğe ilgi duyan her öğrenci topluluğumuza katılabilir." },
+              { q: "İHA veya Roket takımına girmek için ne bilmeliyim?", a: "Önceden bir bilgi zorunluluğu yoktur. Temel eğitimler ekiplerimiz tarafından verilmektedir. Önemli olan öğrenmeye istekli olmanızdır." },
+              { q: "Üyelik ücretli mi?", a: "Hayır, SAVTEK etkinliklerine katılım ve topluluk üyeliği tamamen ücretsizdir." }
+            ].map((faq, idx) => (
+              <details key={idx} className="faq-item">
+                <summary>{faq.q}</summary>
+                <p>{faq.a}</p>
+              </details>
+            ))}
           </div>
         </div>
       </section>
@@ -496,7 +513,9 @@ function Anasayfa() {
             <div className="contact-form">
               <form ref={formRef} onSubmit={handleSubmit}>
                 <div className="form-group">
+                  <label htmlFor="from_name" className="form-label">Ad Soyad</label>
                   <input
+                    id="from_name"
                     type="text"
                     name="from_name"
                     placeholder="Ad Soyad"
@@ -505,19 +524,23 @@ function Anasayfa() {
                 </div>
 
                 <div className="form-group">
+                  <label htmlFor="from_email" className="form-label">E-posta</label>
                   <input
+                    id="from_email"
                     type="email"
                     name="from_email"
-                    placeholder="E-posta"
+                    placeholder="ornek@mail.com"
                     required
                   />
                 </div>
 
                 <div className="form-group">
+                  <label htmlFor="message" className="form-label">Mesajınız</label>
                   <textarea
+                    id="message"
                     name="message"
-                    rows="4"
-                    placeholder="Mesajınız"
+                    rows="5"
+                    placeholder="Mesajınızı buraya yazın..."
                     required
                   />
                 </div>
@@ -530,8 +553,10 @@ function Anasayfa() {
                   {isSubmitting ? "Gönderiliyor..." : "Mesaj Gönder"}
                 </button>
 
-                {submitMessage && (
-                  <p className="submit-message">{submitMessage}</p>
+                {submitMessage.text && (
+                  <p className={`submit-message ${submitMessage.success ? "success" : "error"}`}>
+                    {submitMessage.success ? "✅" : "❌"} {submitMessage.text}
+                  </p>
                 )}
               </form>
             </div>

@@ -12,9 +12,10 @@ html {
 
 body {
   font-family: "Inter", system-ui, sans-serif;
-  background: #fff;
-  color: #222;
+  background: var(--bg-main);
+  color: var(--text-main);
   min-height: 100vh;
+  transition: background 0.25s ease, color 0.25s ease;
 }
 
 a {

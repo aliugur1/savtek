@@ -1,47 +1,42 @@
-import { useState, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import SEOMeta from "../components/SEOMeta";
-import { getActiveItems } from "../utils/softDelete";
+import { getTeamBySlug } from "../lib/dataService";
 import "../styles/takim-detay.css";
 
 function TakimDetay() {
   const { slug } = useParams();
   const [takim, setTakim] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [currentImage, setCurrentImage] = useState(0);
 
-  // localStorage'dan takımı yükle
   useEffect(() => {
-    // Sadece aktif (silinmemiş) takımları kontrol et
-    const takimlar = getActiveItems("takimlar");
-    const bulunanTakim = takimlar.find((t) => t.slug === slug);
-
-    if (bulunanTakim) {
-      setTakim(bulunanTakim);
-    }
+    setLoading(true);
+    getTeamBySlug(slug).then((t) => { setTakim(t); setLoading(false); });
   }, [slug]);
 
   // Lightbox fonksiyonları
-  const openLightbox = (index) => {
+  const openLightbox = useCallback((index) => {
     setCurrentImage(index);
     setLightboxOpen(true);
-  };
+  }, []);
 
-  const closeLightbox = () => setLightboxOpen(false);
+  const closeLightbox = useCallback(() => setLightboxOpen(false), []);
 
-  const nextImage = () => {
+  const nextImage = useCallback(() => {
     if (takim?.gallery) {
       setCurrentImage((prev) => (prev + 1) % takim.gallery.length);
     }
-  };
+  }, [takim]);
 
-  const prevImage = () => {
+  const prevImage = useCallback(() => {
     if (takim?.gallery) {
       setCurrentImage(
         (prev) => (prev - 1 + takim.gallery.length) % takim.gallery.length
       );
     }
-  };
+  }, [takim]);
 
   // Keyboard navigation
   useEffect(() => {
@@ -54,7 +49,9 @@ function TakimDetay() {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [lightboxOpen, takim]);
+  }, [closeLightbox, lightboxOpen, nextImage, prevImage]);
+
+  if (loading) return null;
 
   // Takım bulunamadıysa
   if (!takim) {

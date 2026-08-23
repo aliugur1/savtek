@@ -1,97 +1,52 @@
-import { useState, useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import SEOMeta from "../components/SEOMeta";
-import { getActiveItems } from "../utils/softDelete";
+import { getEvents } from "../lib/dataService";
 import "../styles/etkinlik.css";
+
+const readTeamPanelEvents = () => {
+  const teamEvents = [];
+  try {
+    Object.keys(localStorage)
+      .filter((k) => k.startsWith("savtek-team-panel:"))
+      .forEach((key) => {
+        const parsed = JSON.parse(localStorage.getItem(key) || "{}");
+        const teamName = parsed?.team?.name || "Takım";
+        const teamSlug = parsed?.team?.slug || "takim";
+        (parsed?.events || []).forEach((ev) => {
+          teamEvents.push({
+            id: `team-${teamSlug}-${ev.id || ""}`,
+            slug: `takim-${teamSlug}-${ev.id || ""}`,
+            title: ev.title,
+            category: "Takım Etkinliği",
+            date: ev.date || "",
+            excerpt: ev.description || "",
+            image: "/hero-anka.png",
+            location: ev.location || "",
+            teamName,
+            isTeamEvent: true,
+          });
+        });
+      });
+  } catch { /* ignore */ }
+  return teamEvents;
+};
 
 function Etkinlik() {
   const [activeCategory, setActiveCategory] = useState("Tümü");
   const [events, setEvents] = useState([]);
-  const [categories, setCategories] = useState(["Tümü"]);
 
-  // Load events from localStorage (Admin panel integration)
   useEffect(() => {
-    const storedEvents = localStorage.getItem("etkinlikler");
-    if (storedEvents) {
-      // Sadece aktif (silinmemiş) etkinlikleri göster
-      const parsedEvents = getActiveItems("etkinlikler");
-      setEvents(parsedEvents);
-
-      // Extract unique categories
-      const uniqueCategories = [
-        "Tümü",
-        ...new Set(parsedEvents.map((e) => e.category)),
-      ];
-      setCategories(uniqueCategories);
-    } else {
-      // Default dummy data
-      const dummyEvents = [
-        {
-          id: "1",
-          title: "TG25 - Teknoloji Günü 2025",
-          slug: "tg25-teknoloji-gunu",
-          category: "Seminer",
-          date: "13 Aralık 2025",
-          excerpt:
-            "ASELSAN, HAVELSAN ve SIEMENS temsilcilerinin katılımıyla düzenlenen Teknoloji Günü etkinliğimiz. Savunma sanayi ve kariyer fırsatları hakkında bilgilendirme...",
-          image: "/hero-anka.png",
-          location: "KTO Karatay Üniversitesi",
-        },
-        {
-          id: "2",
-          title: "Roket Tasarımında CAD Kullanımı",
-          slug: "roket-cad-workshop",
-          category: "Workshop",
-          date: "15 Kasım 2025",
-          excerpt:
-            "Roket takımımızın düzenlediği CAD workshop'unda, roket tasarım süreçleri ve kullanılan yazılımlar hakkında uygulamalı eğitim...",
-          image: "/hero-anka.png",
-          location: "SAVTEK Atölyesi",
-        },
-        {
-          id: "3",
-          title: "TEKNOFEST 2025 Hazırlık Kampı",
-          slug: "teknofest-2025-kamp",
-          category: "TEKNOFEST",
-          date: "10 Kasım 2025",
-          excerpt:
-            "TEKNOFEST yarışmalarına katılacak takımlarımız için yoğun hazırlık kampı. Proje geliştirme, sunum teknikleri ve teknik eğitimler...",
-          image: "/hero-anka.png",
-          location: "Kampüs",
-        },
-        {
-          id: "4",
-          title: "İnsansız Hava Araçları Tanıtımı",
-          slug: "iha-tanitim",
-          category: "Seminer",
-          date: "5 Kasım 2025",
-          excerpt:
-            "İHA takımımızın hazırladığı tanıtım seminerinde, insansız hava araçları teknolojisi ve proje süreçleri hakkında bilgilendirme yapıldı...",
-          image: "/hero-anka.png",
-          location: "Konferans Salonu",
-        },
-        {
-          id: "5",
-          title: "Arduino ile Robot Kontrolü Workshop'u",
-          slug: "arduino-robot-workshop",
-          category: "Workshop",
-          date: "28 Ekim 2025",
-          excerpt:
-            "Yeni üyelerimiz için düzenlenen temel seviye Arduino workshop'u. Robot kontrol sistemleri ve sensör kullanımı uygulamaları...",
-          image: "/hero-anka.png",
-          location: "Laboratuvar",
-        },
-      ];
-      setEvents(dummyEvents);
-      localStorage.setItem("etkinlikler", JSON.stringify(dummyEvents));
-
-      const uniqueCategories = [
-        "Tümü",
-        ...new Set(dummyEvents.map((e) => e.category)),
-      ];
-      setCategories(uniqueCategories);
-    }
+    getEvents().then((base) => {
+      const team = readTeamPanelEvents();
+      setEvents([...team, ...base]);
+    });
   }, []);
+
+  const categories = useMemo(
+    () => ["Tümü", ...new Set(events.map((e) => e.category))],
+    [events]
+  );
 
   // Filter events by category
   const filteredEvents =
@@ -152,6 +107,9 @@ function Etkinlik() {
                     >
                       <img src={event.image} alt={event.title} loading="lazy" />
                       <div className="category-badge">{event.category}</div>
+                      {event.isTeamEvent && (
+                        <div className="team-event-badge">Takım Etkinliği</div>
+                      )}
                     </Link>
                     <div className="etkinlik-content">
                       <div className="etkinlik-meta">
@@ -162,6 +120,9 @@ function Etkinlik() {
                           </span>
                         )}
                       </div>
+                      {event.isTeamEvent && event.teamName && (
+                        <div className="team-event-team">{event.teamName}</div>
+                      )}
                       <Link to={`/etkinlikler/${event.slug}`}>
                         <h3>{event.title}</h3>
                       </Link>

@@ -44,7 +44,7 @@ function KVKKConsent() {
             KVKK kapsamında kişisel verilerinizin korunmasına önem veriyoruz.
             Detaylı bilgi için{" "}
             <a
-              href="/gizlilik-politikasi"
+              href="/gizlilik"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Gizlilik Politikamız sayfasını aç"

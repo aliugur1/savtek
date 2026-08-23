@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
+import { getSponsorById, saveSponsor } from "../lib/dataService";
 import "../styles/admin.css";
 
 function AdminSponsorForm() {
@@ -16,27 +17,11 @@ function AdminSponsorForm() {
     order: 999,
   });
 
-  // Load sponsor data if editing
   useEffect(() => {
-    if (isEdit) {
-      const stored = localStorage.getItem("sponsorlar");
-      if (stored) {
-        const sponsors = JSON.parse(stored);
-        const sponsor = sponsors.find((s) => String(s.id) === String(id));
-        if (sponsor) {
-          // Ensure all fields have defined values
-          setFormData({
-            id: sponsor.id,
-            name: sponsor.name || "",
-            logo: sponsor.logo || "",
-            website: sponsor.website || "",
-            instagram: sponsor.instagram || "",
-            linkedin: sponsor.linkedin || "",
-            order: sponsor.order || 999,
-          });
-        }
-      }
-    }
+    if (!isEdit) return;
+    getSponsorById(id).then(sponsor => {
+      if (sponsor) setFormData({ ...sponsor });
+    });
   }, [id, isEdit]);
 
   const handleChange = (e) => {
@@ -47,28 +32,9 @@ function AdminSponsorForm() {
     }));
   };
 
-  // Submit form
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const stored = localStorage.getItem("sponsorlar");
-    let sponsors = stored ? JSON.parse(stored) : [];
-
-    if (isEdit) {
-      // Update existing sponsor
-      sponsors = sponsors.map((s) =>
-        String(s.id) === String(id) ? formData : s
-      );
-    } else {
-      // Add new sponsor
-      const newSponsor = {
-        ...formData,
-        id: String(Date.now()),
-      };
-      sponsors.push(newSponsor);
-    }
-
-    localStorage.setItem("sponsorlar", JSON.stringify(sponsors));
+    await saveSponsor(formData);
     navigate("/admin/sponsorlar");
   };
 

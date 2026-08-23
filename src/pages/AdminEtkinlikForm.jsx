@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
+import { getEventById, saveEvent } from "../lib/dataService";
 import { createLog } from "../utils/adminLogger";
 import "../styles/admin.css";
 
@@ -38,56 +39,11 @@ function AdminEtkinlikForm() {
     activity: "",
   });
 
-  // Load event data if editing
   useEffect(() => {
-    if (isEdit) {
-      if (import.meta.env.DEV) {
-        console.log("Editing event with ID:", id);
-      }
-      const stored = localStorage.getItem("etkinlikler");
-      if (stored) {
-        const events = JSON.parse(stored);
-        if (import.meta.env.DEV) {
-          console.log("All events:", events);
-        }
-        const event = events.find((e) => String(e.id) === String(id));
-        if (import.meta.env.DEV) {
-          console.log("Found event:", event);
-        }
-        if (event) {
-          // Ensure all fields have defined values
-          // eslint-disable-next-line react-hooks/exhaustive-deps
-          setFormData({
-            id: event.id,
-            title: event.title || "",
-            slug: event.slug || "",
-            category: event.category || "Seminer",
-            date: event.date || "",
-            time: event.time || "",
-            location: event.location || "",
-            locationLink: event.locationLink || "",
-            excerpt: event.excerpt || "",
-            description: event.description || "",
-            image: event.image || "/hero-anka.png",
-            mainImage: event.mainImage || "/hero-anka.png",
-            speakers: Array.isArray(event.speakers) ? event.speakers : [],
-            program: Array.isArray(event.program) ? event.program : [],
-            gallery: Array.isArray(event.gallery) ? event.gallery : [],
-          });
-          if (import.meta.env.DEV) {
-            console.log("FormData set successfully");
-          }
-        } else {
-          if (import.meta.env.DEV) {
-            console.error("Event not found with ID:", id);
-          }
-        }
-      } else {
-        if (import.meta.env.DEV) {
-          console.error("No events in localStorage");
-        }
-      }
-    }
+    if (!isEdit) return;
+    getEventById(id).then(event => {
+      if (event) setFormData({ ...event, speakers: event.speakers ?? [], program: event.program ?? [], gallery: event.gallery ?? [] });
+    });
   }, [id, isEdit]);
 
   // Generate slug from title
@@ -184,37 +140,10 @@ function AdminEtkinlikForm() {
   };
 
   // Submit form
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const stored = localStorage.getItem("etkinlikler");
-    let events = stored ? JSON.parse(stored) : [];
-
-    if (isEdit) {
-      // Update existing event - compare as string
-      const oldEvent = events.find((e) => String(e.id) === String(id));
-      events = events.map((e) => (String(e.id) === String(id) ? formData : e));
-
-      // Log update action
-      createLog("update", "etkinlik", id, {
-        before: oldEvent,
-        after: formData,
-      });
-    } else {
-      // Add new event - use string ID
-      const newEvent = {
-        ...formData,
-        id: String(Date.now()), // String ID for consistency
-      };
-      events.push(newEvent);
-
-      // Log create action
-      createLog("create", "etkinlik", newEvent.id, {
-        new: newEvent,
-      });
-    }
-
-    localStorage.setItem("etkinlikler", JSON.stringify(events));
+    const saved = await saveEvent(formData);
+    createLog(isEdit ? "update" : "create", "etkinlik", saved?.id || id, { data: formData });
     navigate("/admin/etkinlikler");
   };
 

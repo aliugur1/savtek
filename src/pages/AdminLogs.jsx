@@ -1,15 +1,9 @@
-import { useState, useEffect } from "react";
-import {
-  getAllLogs,
-  getLogStats,
-  exportLogs,
-  clearOldLogs,
-} from "../utils/adminLogger";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { getAllLogs, exportLogs } from "../utils/adminLogger";
 import "../styles/admin.css";
 
 function AdminLogs() {
   const [logs, setLogs] = useState([]);
-  const [stats, setStats] = useState(null);
   const [filters, setFilters] = useState({
     action: "",
     entity: "",
@@ -17,20 +11,21 @@ function AdminLogs() {
   });
   const [showFilters, setShowFilters] = useState(false);
 
-  useEffect(() => {
-    loadLogs();
-    loadStats();
+  const loadLogs = useCallback(async () => {
+    const result = await getAllLogs(filters);
+    setLogs(result);
   }, [filters]);
 
-  const loadLogs = () => {
-    const filteredLogs = getAllLogs(filters);
-    setLogs(filteredLogs);
-  };
+  useEffect(() => {
+    loadLogs();
+  }, [loadLogs]);
 
-  const loadStats = () => {
-    const logStats = getLogStats();
-    setStats(logStats);
-  };
+  const stats = useMemo(() => ({
+    total: logs.length,
+    recent: logs.slice(0, 10),
+    byUser: logs.reduce((acc, l) => { acc[l.userId] = (acc[l.userId] || 0) + 1; return acc; }, {}),
+    byEntity: logs.reduce((acc, l) => { acc[l.entity] = (acc[l.entity] || 0) + 1; return acc; }, {}),
+  }), [logs]);
 
   const handleFilterChange = (key, value) => {
     setFilters((prev) => ({
@@ -48,16 +43,7 @@ function AdminLogs() {
   };
 
   const handleExport = () => {
-    exportLogs();
-  };
-
-  const handleCleanup = () => {
-    if (window.confirm("90 günden eski loglar silinecek. Devam edilsin mi?")) {
-      const deletedCount = clearOldLogs(90);
-      alert(`${deletedCount} eski log silindi.`);
-      loadLogs();
-      loadStats();
-    }
+    exportLogs(logs);
   };
 
   const getActionIcon = (action) => {
@@ -98,14 +84,11 @@ function AdminLogs() {
           <button onClick={handleExport} className="btn-secondary">
             📥 Dışa Aktar
           </button>
-          <button onClick={handleCleanup} className="btn-secondary">
-            🧹 Eski Logları Temizle
-          </button>
         </div>
       </div>
 
       {/* STATS */}
-      {stats && (
+      {logs.length > 0 && (
         <div className="stats-grid">
           <div className="stat-card">
             <span className="stat-label">Toplam Log</span>

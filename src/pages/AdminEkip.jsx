@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { getEkip, softDeleteEkipMember } from "../lib/dataService";
 import "../styles/admin.css";
 
 function AdminEkip() {
@@ -7,50 +8,14 @@ function AdminEkip() {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterRole, setFilterRole] = useState("Tümü");
 
-  // Load team members from localStorage
-  useEffect(() => {
-    const stored = localStorage.getItem("ekip");
-    if (stored) {
-      setEkipUyeleri(JSON.parse(stored));
-    } else {
-      // Dummy data
-      const dummyData = [
-        {
-          id: "1",
-          name: "Süleyman Arda CAN",
-          role: "Topluluk Başkanı",
-          coordinationTitle: "",
-          department: "Elektrik-Elektronik Mühendisliği",
-          photo: "/baskan.png",
-          instagram: "https://www.instagram.com/arda.canm",
-          linkedin: "https://www.linkedin.com/in/süleyman-arda-can",
-          category: "Yönetim",
-          order: 1,
-        },
-        {
-          id: "2",
-          name: "Bilge AKIN",
-          role: "Başkan Yardımcısı",
-          coordinationTitle: "",
-          department: "Endüstri Mühendisliği",
-          photo: "/baskanyardimcisi.png",
-          instagram: "https://www.instagram.com/bilgeakin_",
-          linkedin: "https://www.linkedin.com/in/bilge-akın-387336339/",
-          category: "Yönetim",
-          order: 2,
-        },
-      ];
-      setEkipUyeleri(dummyData);
-      localStorage.setItem("ekip", JSON.stringify(dummyData));
-    }
-  }, []);
+  const refresh = () => getEkip().then(setEkipUyeleri);
 
-  // Delete member
-  const handleDelete = (id) => {
+  useEffect(() => { refresh(); }, []);
+
+  const handleDelete = async (id) => {
     if (window.confirm("Bu üyeyi silmek istediğinizden emin misiniz?")) {
-      const updated = ekipUyeleri.filter((e) => String(e.id) !== String(id));
-      setEkipUyeleri(updated);
-      localStorage.setItem("ekip", JSON.stringify(updated));
+      await softDeleteEkipMember(id);
+      refresh();
     }
   };
 

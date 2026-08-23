@@ -1,47 +1,12 @@
 import { useState, useEffect } from "react";
+import { getSponsors } from "../lib/dataService";
 import "../styles/sponsors.css";
 
 export default function Sponsors({ showHeader = true }) {
   const [sponsors, setSponsors] = useState([]);
 
-  // Load sponsors from localStorage
   useEffect(() => {
-    const stored = localStorage.getItem("sponsorlar");
-    if (stored) {
-      const parsedSponsors = JSON.parse(stored);
-      // Sort by order
-      const sorted = parsedSponsors.sort(
-        (a, b) => (a.order || 999) - (b.order || 999)
-      );
-      setSponsors(sorted);
-    } else {
-      // Default sponsors if none exist
-      const defaultSponsors = [
-        {
-          id: "1",
-          name: "KTÜN",
-          logo: "/sponsors/ktun.png",
-          website: "https://ktun.edu.tr",
-          order: 1,
-        },
-        {
-          id: "2",
-          name: "SAVTEK",
-          logo: "/sponsors/savtek.png",
-          website: "https://savtek.com",
-          order: 2,
-        },
-        {
-          id: "3",
-          name: "Teknofest",
-          logo: "/sponsors/teknofest.png",
-          website: "https://teknofest.org",
-          order: 3,
-        },
-      ];
-      setSponsors(defaultSponsors);
-      localStorage.setItem("sponsorlar", JSON.stringify(defaultSponsors));
-    }
+    getSponsors().then(setSponsors);
   }, []);
 
   // Smooth infinite scroll için sponsor listesini 3 kere tekrarla

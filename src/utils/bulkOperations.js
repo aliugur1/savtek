@@ -1,79 +1,32 @@
-/**
- * Bulk Operations Utility
- * Perform multiple operations at once
- */
+import { bulkSoftDeleteTeams, bulkSoftDeleteEvents } from "../lib/dataService";
+import { softDeleteItem } from "./softDelete";
 
-/**
- * Bulk delete items
- */
-export function bulkDelete(storageKey, itemIds) {
-  const items = JSON.parse(localStorage.getItem(storageKey) || "[]");
-  const updatedItems = items.map((item) => {
-    if (itemIds.includes(String(item.id))) {
-      return {
-        ...item,
-        isDeleted: true,
-        deletedAt: new Date().toISOString(),
-      };
-    }
-    return item;
-  });
-  localStorage.setItem(storageKey, JSON.stringify(updatedItems));
+export async function bulkDelete(storageKey, itemIds) {
+  if (storageKey === "takimlar") return bulkSoftDeleteTeams(itemIds);
+  if (storageKey === "etkinlikler") return bulkSoftDeleteEvents(itemIds);
+  await Promise.all(itemIds.map(id => softDeleteItem(storageKey, id)));
   return itemIds.length;
 }
 
-/**
- * Bulk restore items
- */
-export function bulkRestore(storageKey, itemIds) {
-  const items = JSON.parse(localStorage.getItem(storageKey) || "[]");
-  const updatedItems = items.map((item) => {
-    if (itemIds.includes(String(item.id))) {
-      return {
-        ...item,
-        isDeleted: false,
-        deletedAt: null,
-        restoredAt: new Date().toISOString(),
-      };
-    }
-    return item;
-  });
-  localStorage.setItem(storageKey, JSON.stringify(updatedItems));
+export async function bulkRestore(storageKey, itemIds) {
+  const { restoreItem } = await import("./softDelete");
+  await Promise.all(itemIds.map(id => restoreItem(storageKey, id)));
   return itemIds.length;
 }
 
-/**
- * Bulk update field
- */
-export function bulkUpdateField(storageKey, itemIds, field, value) {
-  const items = JSON.parse(localStorage.getItem(storageKey) || "[]");
-  const updatedItems = items.map((item) => {
-    if (itemIds.includes(String(item.id))) {
-      return {
-        ...item,
-        [field]: value,
-      };
+export async function bulkToggleFeature(storageKey, itemIds, field) {
+  const { getAllItems } = await import("./softDelete");
+  const all = await getAllItems(storageKey);
+  const targets = new Set(itemIds.map(String));
+  for (const item of all) {
+    if (targets.has(String(item.id))) {
+      const { saveTeam, saveEvent, saveEkipMember, saveSponsor } = await import("../lib/dataService");
+      const updated = { ...item, [field]: !item[field] };
+      if (storageKey === "takimlar") await saveTeam(updated);
+      else if (storageKey === "etkinlikler") await saveEvent(updated);
+      else if (storageKey === "ekip") await saveEkipMember(updated);
+      else if (storageKey === "sponsorlar") await saveSponsor(updated);
     }
-    return item;
-  });
-  localStorage.setItem(storageKey, JSON.stringify(updatedItems));
-  return itemIds.length;
-}
-
-/**
- * Bulk toggle feature
- */
-export function bulkToggleFeature(storageKey, itemIds, field) {
-  const items = JSON.parse(localStorage.getItem(storageKey) || "[]");
-  const updatedItems = items.map((item) => {
-    if (itemIds.includes(String(item.id))) {
-      return {
-        ...item,
-        [field]: !item[field],
-      };
-    }
-    return item;
-  });
-  localStorage.setItem(storageKey, JSON.stringify(updatedItems));
+  }
   return itemIds.length;
 }
