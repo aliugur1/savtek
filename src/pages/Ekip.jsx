@@ -3,6 +3,7 @@ import Sponsors from "../components/Sponsors";
 import SEOMeta from "../components/SEOMeta";
 import { getEkip, getSettings } from "../lib/dataService";
 import "../styles/ekip.css";
+import { avatar } from "../lib/avatar";
 
 function Ekip() {
   const [ekipUyeleri, setEkipUyeleri] = useState([]);
@@ -78,7 +79,7 @@ function Ekip() {
                   <div key={person.id} className="leader-card">
                     <div className="leader-image">
                       <img
-                        src={person.photo}
+                        {...avatar(person.photo)}
                         alt={person.name}
                         loading="lazy"
                       />
@@ -129,7 +130,7 @@ function Ekip() {
                       <div key={member.id} className="koordinator-card">
                         <div className="koordinator-image-placeholder">
                           <img
-                            src={member.photo || "/baskan.png"}
+                            {...avatar(member.photo)}
                             alt={member.name}
                             loading="lazy"
                           />

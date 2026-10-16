@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { getEkip, softDeleteEkipMember } from "../lib/dataService";
 import "../styles/admin.css";
+import { avatar } from "../lib/avatar";
 
 function AdminEkip() {
   const [ekipUyeleri, setEkipUyeleri] = useState([]);
@@ -120,7 +121,7 @@ function AdminEkip() {
                   </td>
                   <td>
                     <div className="table-image">
-                      <img src={uye.photo} alt={uye.name} />
+                      <img {...avatar(uye.photo)} alt={uye.name} />
                     </div>
                   </td>
                   <td>

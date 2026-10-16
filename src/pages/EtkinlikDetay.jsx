@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import SEOMeta from "../components/SEOMeta";
 import { getEventBySlug } from "../lib/dataService";
 import "../styles/etkinlik-detay.css";
+import { avatar } from "../lib/avatar";
 
 const findTeamPanelEvent = (slug) => {
   try {
@@ -203,7 +204,7 @@ function EtkinlikDetay() {
                   <div key={index} className="speaker-card">
                     <div className="speaker-image">
                       <img
-                        src={speaker.photo}
+                        {...avatar(speaker.photo)}
                         alt={speaker.name}
                         loading="lazy"
                       />

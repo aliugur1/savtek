@@ -4,6 +4,7 @@ import emailjs from "@emailjs/browser";
 import Sponsors from "../components/Sponsors";
 import { getTeams, getEvents, getEkip } from "../lib/dataService";
 import "../styles/anasayfa.css";
+import { avatar } from "../lib/avatar";
 
 function Anasayfa() {
   const formRef = useRef();
@@ -263,7 +264,7 @@ function Anasayfa() {
           {yonetimEkibi.map((member) => (
             <div key={member.id} className="team-card">
               <div className="team-image">
-                <img src={member.photo} alt={member.name} />
+                <img {...avatar(member.photo)} alt={member.name} />
 
                 <div className="team-socials">
                   {member.linkedin && (

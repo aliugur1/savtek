@@ -2,6 +2,7 @@ import { useState } from "react";
 import Sponsors from "../components/Sponsors";
 import SEOMeta from "../components/SEOMeta";
 import "../styles/tg.css";
+import { avatar } from "../lib/avatar";
 
 function TG() {
   const [lightboxOpen, setLightboxOpen] = useState(false);
@@ -30,7 +31,7 @@ function TG() {
       name: "Bekir Şahin",
       title: "Üretim Planlama Lideri",
       company: "ASELSAN",
-      photo: "/bekir-sahin.jpg",
+      photo: "",
       linkedin: "https://www.linkedin.com/in/bekir-%C5%9Fahin-6a0189130/",
     },
     {
@@ -38,7 +39,7 @@ function TG() {
       name: "Ayşe Yıldız Çevik",
       title: "Proje Mühendisi",
       company: "HAVELSAN",
-      photo: "/ayse-yildiz-cevik.jpg",
+      photo: "",
       linkedin: "https://www.linkedin.com/in/ayseyildiz/",
     },
     {
@@ -46,7 +47,7 @@ function TG() {
       name: "Ali Çağlar Şentürk",
       title: "Kalite Profesyoneli",
       company: "SIEMENS",
-      photo: "/ali-caglar-senturk.jpg",
+      photo: "",
       linkedin: "https://www.linkedin.com/in/ali-caglar-senturk-10a014b5/",
     },
   ];
@@ -154,7 +155,7 @@ function TG() {
                 <div key={speaker.id} className="speaker-card">
                   <div className="speaker-image">
                     <img
-                      src={speaker.photo}
+                      {...avatar(speaker.photo)}
                       alt={speaker.name}
                       loading="lazy"
                     />

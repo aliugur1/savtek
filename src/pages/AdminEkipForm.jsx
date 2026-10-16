@@ -13,7 +13,7 @@ function AdminEkipForm() {
     role: "",
     coordinationTitle: "", // Koordinatörlük adı (örn: "Sosyal Medya Koordinatörlüğü")
     department: "",
-    photo: "/baskan.png",
+    photo: "/avatar.svg",
     instagram: "",
     linkedin: "",
     category: "Yönetim",
@@ -160,7 +160,7 @@ function AdminEkipForm() {
                 value={formData.photo || ""}
                 onChange={handleChange}
                 required
-                placeholder="/baskan.png"
+                placeholder="/avatar.svg"
               />
             </div>
 
