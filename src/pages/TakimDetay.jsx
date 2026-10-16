@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import SEOMeta from "../components/SEOMeta";
 import { getTeamBySlug } from "../lib/dataService";
 import "../styles/takim-detay.css";
+import { avatar } from "../lib/avatar";
 
 function TakimDetay() {
   const { slug } = useParams();
@@ -137,7 +138,7 @@ function TakimDetay() {
                   <div key={index} className="ekip-card">
                     <div className="ekip-photo">
                       <img
-                        src={member.photo || "/logo.png"}
+                        {...avatar(member.photo)}
                         alt={member.name}
                         loading="lazy"
                       />

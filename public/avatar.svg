@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-label="Anonim profil">
+  <rect width="200" height="200" fill="#f1f3f5"/>
+  <g fill="none" stroke="#6b7280" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="100" cy="78" r="30"/>
+    <path d="M44 172c0-31 25-52 56-52s56 21 56 52"/>
+  </g>
+</svg>
