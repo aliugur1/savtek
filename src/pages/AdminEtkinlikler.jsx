@@ -8,7 +8,6 @@ import {
 } from "../utils/softDelete";
 import { createLog } from "../utils/adminLogger";
 import { bulkDelete } from "../utils/bulkOperations";
-import { getEvents } from "../lib/dataService";
 import "../styles/admin.css";
 
 function AdminEtkinlikler() {
