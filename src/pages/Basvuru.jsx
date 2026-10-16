@@ -22,7 +22,7 @@ function Basvuru() {
     try {
       await saveApplication(form);
       setSuccess(true);
-    } catch (err) {
+    } catch {
       setError("Başvuru gönderilirken bir hata oluştu. Lütfen tekrar deneyin.");
     } finally {
       setSubmitting(false);

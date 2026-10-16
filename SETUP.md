@@ -53,6 +53,10 @@ Mesaj: {{message}}
 - `.env` dosyasına `VITE_ADMIN_PASSWORD` olarak ekleyin
 - Şifre login sayfasında gösterilmez
 
+> ⚠️ **`VITE_` ile başlayan her değişken derlenen JavaScript'e gömülür ve tarayıcıda herkes tarafından okunabilir.**
+> `VITE_ADMIN_PASSWORD` gerçek bir sır değildir. Vercel'de (Production/Preview) bu değişkeni **tanımlamayın**;
+> canlıda giriş için Supabase Auth kullanın.
+
 ## 📊 Google Analytics Kurulumu
 
 1. [Google Analytics](https://analytics.google.com/) hesabı oluşturun
